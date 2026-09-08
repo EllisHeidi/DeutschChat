@@ -7,11 +7,12 @@
  * Raw brand palette lives here once. Components consume the *semantic* tokens
  * (background, foreground, primary, accent, ...) — never the raw values.
  * Dark mode is not enabled in Phase 1, but the token structure below is ready
- * for a `.dark` / `[data-theme="dark"]` override block to be added later.
+ * for a `[data-theme="dark"]` override block to be added later: only the
+ * `:root` semantic assignments need to change.
  */
 
 @theme {
-  /* Raw brand palette */
+  /* Raw brand palette — the only place hex values live */
   --color-ink: #171717;
   --color-german-red: #c92127;
   --color-gold: #d9a900;
@@ -23,7 +24,7 @@
     var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
 
-  --radius: 0.75rem;
+  --radius: 0.625rem;
 }
 
 :root {
@@ -31,46 +32,72 @@
   --background: var(--color-cream);
   --foreground: var(--color-ink);
 
+  /* Raised surfaces: cards, sheets, inputs */
   --surface: var(--color-soft-white);
   --surface-foreground: var(--color-ink);
 
-  --muted: var(--color-warm-grey);
-  --muted-foreground: #5c574d;
+  /* Secondary / recessed surfaces and dividers */
+  --muted: #ece6d9;
+  --muted-foreground: #6b6659;
+  --border: var(--color-warm-grey);
+  --border-strong: #cbc4b5;
 
+  /* Primary = actions, active states */
   --primary: var(--color-german-red);
   --primary-foreground: var(--color-soft-white);
+  --primary-hover: #b31d22;
+  --primary-active: #9c191e;
 
+  /* Accent = learning, progress, achievement */
   --accent: var(--color-gold);
   --accent-foreground: var(--color-ink);
+  --accent-strong: #b98f00;
 
-  --border: var(--color-warm-grey);
+  /* Feedback */
+  --success: #3f7d3a;
+  --success-foreground: var(--color-soft-white);
+  --destructive: #b3261e;
+  --destructive-foreground: var(--color-soft-white);
+
   --ring: var(--color-german-red);
 
-  --success: var(--color-gold);
-  --destructive: var(--color-german-red);
+  --shadow-color: 30 25% 12%;
 }
 
-/* Expose the semantic tokens as Tailwind utilities (bg-background, text-foreground, ...) */
+/* Expose semantic tokens as Tailwind utilities (bg-background, text-foreground, ...) */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
+  --color-accent-strong: var(--accent-strong);
+
   --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-ring: var(--ring);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
 }
 
 @layer base {
@@ -78,10 +105,55 @@
     border-color: var(--color-border);
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Consistent, visible focus for keyboard users across all interactive elements */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background-color: color-mix(
+      in oklab,
+      var(--color-primary) 22%,
+      transparent
+    );
+  }
+
+  /* German-language passages: readable measure, kind line breaks */
+  [lang="de"] {
+    hyphens: auto;
+    text-wrap: pretty;
+  }
+}
+
+@layer utilities {
+  /* Subtle dotted underline for vocabulary the learner is still acquiring.
+     Paired always with a text label / icon — never color alone. */
+  .vocab-underline {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    text-decoration-color: color-mix(
+      in oklab,
+      var(--color-accent-strong) 65%,
+      transparent
+    );
   }
 }

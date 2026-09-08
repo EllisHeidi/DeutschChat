@@ -13,14 +13,14 @@ land in the following steps.
 
 ## Tech stack
 
-| Area       | Choice                                              |
-| ---------- | --------------------------------------------------- |
-| Framework  | Next.js 16 (App Router, React 19), TypeScript strict |
-| Styling    | Tailwind CSS v4 (CSS-first `@theme` tokens)          |
-| UI         | shadcn/ui + lucide-react (added in Step 2)           |
-| Backend    | Supabase (Postgres, Auth, RLS) — hosted project      |
-| Testing    | Vitest + Testing Library                             |
-| Tooling    | ESLint (flat) + Prettier + typed env (`@t3-oss/env`) |
+| Area      | Choice                                               |
+| --------- | ---------------------------------------------------- |
+| Framework | Next.js 16 (App Router, React 19), TypeScript strict |
+| Styling   | Tailwind CSS v4 (CSS-first `@theme` tokens)          |
+| UI        | shadcn/ui + lucide-react (added in Step 2)           |
+| Backend   | Supabase (Postgres, Auth, RLS) — hosted project      |
+| Testing   | Vitest + Testing Library                             |
+| Tooling   | ESLint (flat) + Prettier + typed env (`@t3-oss/env`) |
 
 ## Getting started
 
@@ -40,16 +40,16 @@ gitignored and must never be committed. The `service_role` key is server-only.
 
 ## Scripts
 
-| Script               | Purpose                                          |
-| -------------------- | ------------------------------------------------ |
-| `npm run dev`        | Start the dev server                             |
-| `npm run build`      | Production build                                 |
-| `npm run typecheck`  | `tsc --noEmit`                                   |
-| `npm run lint`       | ESLint                                           |
-| `npm run test`       | Vitest (single run)                              |
-| `npm run format`     | Prettier write                                   |
-| `npm run check`      | typecheck + lint + test                          |
-| `npm run db:*`       | Supabase CLI helpers (wired up in Step 3)        |
+| Script              | Purpose                                   |
+| ------------------- | ----------------------------------------- |
+| `npm run dev`       | Start the dev server                      |
+| `npm run build`     | Production build                          |
+| `npm run typecheck` | `tsc --noEmit`                            |
+| `npm run lint`      | ESLint                                    |
+| `npm run test`      | Vitest (single run)                       |
+| `npm run format`    | Prettier write                            |
+| `npm run check`     | typecheck + lint + test                   |
+| `npm run db:*`      | Supabase CLI helpers (wired up in Step 3) |
 
 Lint/typecheck/CI steps that don't need real secrets can set
 `SKIP_ENV_VALIDATION=1`.
