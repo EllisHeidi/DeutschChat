@@ -1,0 +1,5 @@
+.next
+node_modules
+coverage
+types/database.ts
+package-lock.json
