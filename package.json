@@ -22,7 +22,7 @@
     "db:push": "supabase db push",
     "db:diff": "supabase db diff",
     "db:types": "supabase gen types typescript --linked --schema public > types/database.ts",
-    "db:seed": "tsx scripts/generate-seed.ts"
+    "db:validate": "tsx scripts/db/validate.ts"
   },
   "dependencies": {
     "@radix-ui/react-popover": "^1.1.23",
@@ -42,6 +42,7 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^7.0.1",

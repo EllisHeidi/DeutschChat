@@ -1,0 +1,31 @@
+# Supabase CLI configuration.
+# `project_id` is a local label only; link to a hosted project with:
+#   npx supabase link --project-ref <your-project-ref>
+project_id = "deutschchat"
+
+[db]
+major_version = 16
+
+[db.migrations]
+schema_paths = []
+
+# Local development stack (only used if you run `supabase start` with Docker).
+# The project targets a hosted Supabase instance; local is optional.
+[api]
+enabled = true
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+
+[studio]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/**"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true

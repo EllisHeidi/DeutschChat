@@ -7,6 +7,11 @@ import { z } from "zod";
  * - `server` vars are never exposed to the browser bundle.
  * - `client` vars must be prefixed with `NEXT_PUBLIC_`.
  * - Import from `@/env` instead of reading `process.env` directly.
+ *
+ * The Supabase vars are optional so the app compiles and runs before a Supabase
+ * project has been created. When they ARE set they are still validated. Code
+ * that needs them calls `requireSupabaseEnv()` / `isSupabaseConfigured()` from
+ * `@/lib/supabase/config`, which fail loudly with setup instructions.
  */
 export const env = createEnv({
   server: {
@@ -14,11 +19,11 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     // Server-side Supabase access (RLS-bypassing). Never import into client code.
-    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   },
   client: {
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
     NEXT_PUBLIC_SITE_URL: z.string().url().default("http://localhost:3000"),
   },
   experimental__runtimeEnv: {
