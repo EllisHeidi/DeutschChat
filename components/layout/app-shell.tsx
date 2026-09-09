@@ -5,6 +5,9 @@ import {
   AppSidebar,
   AppTopBar,
 } from "@/components/layout/app-nav";
+import { ScrollReset } from "@/components/layout/scroll-reset";
+
+const SCROLL_ID = "app-scroll";
 
 /**
  * The authenticated app frame: a sidebar on desktop, a slim wordmark bar +
@@ -23,10 +26,14 @@ export function AppShell({
       <AppSidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <AppTopBar />
-        <main className="min-h-0 flex-1 overflow-y-auto">
+        <ScrollReset targetId={SCROLL_ID} />
+        <main
+          id={SCROLL_ID}
+          className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto"
+        >
           <div
             className={cn(
-              "mx-auto w-full max-w-xl px-4 pt-6 pb-12 sm:px-6 lg:px-8 lg:pt-12 lg:pb-20",
+              "mx-auto w-full max-w-xl px-4 pt-6 pb-12 sm:px-6 lg:max-w-2xl lg:px-8 lg:pt-12 lg:pb-20",
               contentClassName,
             )}
           >

@@ -32,7 +32,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute -inset-x-4 -top-6 -bottom-12 z-0 overflow-hidden sm:-inset-x-6">
+      <div className="pointer-events-none absolute -top-6 left-1/2 z-0 h-[calc(100%+7.5rem)] min-h-dvh w-screen -translate-x-1/2 overflow-hidden lg:-top-12 lg:h-[calc(100%+11rem)]">
         {/* eslint-disable-next-line @next/next/no-img-element -- experimental background */}
         <img
           src="/backgrounds/flag-germany.jpg"
@@ -42,7 +42,8 @@ export default async function DashboardPage() {
         />
         <div className="absolute inset-0 bg-neutral-950/45" />
       </div>
-      <div className="relative z-10 space-y-7">
+
+      <div className="relative z-10 xl:mx-[calc((38rem-min(64rem,calc(100vw-21rem)))/2)] xl:w-[min(64rem,calc(100vw-21rem))]">
         <header className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-0.5">
             <h1 className="text-xl font-semibold tracking-tight text-balance text-white">
@@ -66,53 +67,59 @@ export default async function DashboardPage() {
           </span>
         </header>
 
-        {!s.supabaseConfigured ? (
-          <SetupNotice />
-        ) : !s.signedIn ? (
-          <SignInNotice />
-        ) : null}
+        <div className="mt-7 space-y-7 lg:mt-8 xl:grid xl:grid-cols-3 xl:items-start xl:gap-7 xl:space-y-0">
+          <div className="space-y-7 xl:col-span-2">
+            {!s.supabaseConfigured ? (
+              <SetupNotice />
+            ) : !s.signedIn ? (
+              <SignInNotice />
+            ) : null}
 
-        <LevelHeroCard
-          levelCode={s.levelCode}
-          levelName={s.levelName}
-          completed={s.completedLessons}
-          total={s.totalLessons}
-          isFree={isFreeLevel(s.levelCode)}
-          continueHref={continueHref}
-        />
+            <LevelHeroCard
+              levelCode={s.levelCode}
+              levelName={s.levelName}
+              completed={s.completedLessons}
+              total={s.totalLessons}
+              isFree={isFreeLevel(s.levelCode)}
+              continueHref={continueHref}
+            />
 
-        <section className="space-y-3">
-          <SectionHeading className="text-white">Heute</SectionHeading>
-          <TodayPanel
-            itemsPracticed={s.today?.itemsPracticed ?? 0}
-            vocabReviewed={s.today?.vocabReviewed ?? 0}
-            minutesSpent={s.today?.minutesSpent ?? 0}
-          />
-        </section>
+            <section className="space-y-3">
+              <SectionHeading className="text-white">Heute</SectionHeading>
+              <TodayPanel
+                itemsPracticed={s.today?.itemsPracticed ?? 0}
+                vocabReviewed={s.today?.vocabReviewed ?? 0}
+                minutesSpent={s.today?.minutesSpent ?? 0}
+              />
+            </section>
 
-        <section className="space-y-3">
-          <div className="flex items-baseline justify-between">
-            <SectionHeading className="text-white">
-              Empfohlene Konversation
-            </SectionHeading>
-            <Link
-              href="/chat"
-              className="text-xs font-medium text-white/70 hover:text-white"
-            >
-              Alle
-            </Link>
+            <section className="space-y-3">
+              <div className="flex items-baseline justify-between">
+                <SectionHeading className="text-white">
+                  Empfohlene Konversation
+                </SectionHeading>
+                <Link
+                  href="/chat"
+                  className="text-xs font-medium text-white/70 hover:text-white"
+                >
+                  Alle
+                </Link>
+              </div>
+              <RecommendedConversation
+                title="Im Sprachcafé"
+                meta="A1 · Sich vorstellen"
+                characterName="Lena"
+                characterInitials="LE"
+              />
+            </section>
           </div>
-          <RecommendedConversation
-            title="Im Sprachcafé"
-            meta="A1 · Sich vorstellen"
-            characterName="Lena"
-            characterInitials="LE"
-          />
-        </section>
 
-        <VocabularyMastery
-          counts={s.vocab ?? { new: 0, learning: 0, known: 0 }}
-        />
+          <div className="space-y-7">
+            <VocabularyMastery
+              counts={s.vocab ?? { new: 0, learning: 0, known: 0 }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

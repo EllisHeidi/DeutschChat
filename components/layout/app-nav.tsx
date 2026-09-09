@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/layout/logo";
 import { TaglineLockup } from "@/components/layout/tagline-lockup";
 import { RasterIcon, NAV_ICON, BRAND } from "@/components/icons/raster-icon";
 
@@ -86,15 +85,23 @@ export function AppBottomNav() {
 export function AppSidebar() {
   const isActive = useActive();
   return (
-    <aside className="border-border bg-surface hidden w-60 shrink-0 flex-col border-r lg:flex">
-      <div className="px-5 py-6">
-        <Link href="/" className="inline-flex rounded-sm">
-          <Logo size="lg" />
+    <aside className="border-border bg-surface hidden w-72 shrink-0 flex-col border-r lg:flex">
+      <div className="px-5 py-7">
+        <Link
+          href="/"
+          className="inline-flex rounded-sm"
+          aria-label="DeutschChat"
+        >
+          <RasterIcon
+            src={BRAND.wordmark}
+            alt="DeutschChat"
+            className="h-16 w-auto"
+          />
         </Link>
       </div>
       <nav
         aria-label="Hauptnavigation"
-        className="flex flex-1 flex-col gap-1 px-3"
+        className="flex flex-1 flex-col gap-1 px-4"
       >
         {NAV_ITEMS.map(({ href, label }) => {
           const active = isActive(href);
@@ -104,13 +111,13 @@ export function AppSidebar() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "focus-visible:ring-ring relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                "focus-visible:ring-ring relative flex items-center gap-3 rounded-lg px-3.5 py-3 text-[0.9375rem] font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
                 active
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              <NavIcon href={href} active={active} className="size-6" />
+              <NavIcon href={href} active={active} className="size-[1.6rem]" />
               {label}
             </Link>
           );
