@@ -22,6 +22,7 @@
     "db:push": "supabase db push",
     "db:diff": "supabase db diff",
     "db:types": "supabase gen types typescript --linked --schema public > types/database.ts",
+    "db:seed": "tsx scripts/db/generate-seed.ts",
     "db:validate": "tsx scripts/db/validate.ts"
   },
   "dependencies": {

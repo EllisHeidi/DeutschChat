@@ -1,9 +1,12 @@
 import * as React from "react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RasterIcon } from "@/components/icons/raster-icon";
 
 type EmptyStateProps = {
   icon: LucideIcon;
+  /** Optional illustration shown instead of the icon glyph. */
+  image?: string;
   title: string;
   description?: string;
   action?: React.ReactNode;
@@ -12,6 +15,7 @@ type EmptyStateProps = {
 
 function EmptyState({
   icon: Icon,
+  image,
   title,
   description,
   action,
@@ -24,9 +28,13 @@ function EmptyState({
         className,
       )}
     >
-      <span className="bg-surface text-muted-foreground grid size-11 place-items-center rounded-full">
-        <Icon className="size-5" aria-hidden />
-      </span>
+      {image ? (
+        <RasterIcon src={image} className="h-16 w-auto" />
+      ) : (
+        <span className="bg-surface text-muted-foreground grid size-11 place-items-center rounded-full">
+          <Icon className="size-5" aria-hidden />
+        </span>
+      )}
       <div className="space-y-1">
         <p className="text-foreground text-sm font-semibold">{title}</p>
         {description ? (

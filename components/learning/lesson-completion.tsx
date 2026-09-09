@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PageHeading, BodySecondary } from "@/components/ui/typography";
+import { TaglineLockup } from "@/components/layout/tagline-lockup";
+import { RasterIcon, STATUS_ICON } from "@/components/icons/raster-icon";
 
 type CompletionStat = { label: string; value: string };
 
@@ -30,39 +31,44 @@ function LessonCompletion({
   return (
     <div
       className={cn(
-        "border-border bg-surface flex flex-col items-center gap-4 rounded-xl border px-6 py-10 text-center",
+        "border-border bg-surface flex flex-col items-center gap-5 rounded-2xl border px-6 py-9 text-center",
         className,
       )}
     >
-      <span className="bg-success/15 text-success grid size-14 place-items-center rounded-full">
-        <Check className="size-7" aria-hidden />
-      </span>
-      <div className="space-y-1">
+      <RasterIcon
+        src={STATUS_ICON.completed}
+        className="ring-success/15 size-16 rounded-full ring-8"
+      />
+      <div className="space-y-1.5">
         <PageHeading>{title}</PageHeading>
         <BodySecondary className="mx-auto max-w-sm">{message}</BodySecondary>
       </div>
 
       {stats && stats.length > 0 ? (
-        <dl className="border-border flex flex-wrap justify-center gap-x-8 gap-y-2 border-y py-3">
+        <dl className="border-border grid w-full grid-cols-3 gap-2 border-y py-4">
           {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <dt className="text-muted-foreground text-xs">{s.label}</dt>
-              <dd className="text-foreground text-lg font-semibold">
+            <div key={s.label} className="space-y-0.5 text-center">
+              <dd className="text-foreground text-xl font-semibold tracking-tight">
                 {s.value}
               </dd>
+              <dt className="text-muted-foreground text-xs">{s.label}</dt>
             </div>
           ))}
         </dl>
       ) : null}
 
-      <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-        <Button onClick={onPrimary}>{primaryLabel}</Button>
+      <div className="flex w-full flex-col gap-2">
+        <Button className="w-full" onClick={onPrimary}>
+          {primaryLabel}
+        </Button>
         {secondaryLabel ? (
-          <Button variant="ghost" onClick={onSecondary}>
+          <Button variant="ghost" className="w-full" onClick={onSecondary}>
             {secondaryLabel}
           </Button>
         ) : null}
       </div>
+
+      <TaglineLockup size="sm" />
     </div>
   );
 }

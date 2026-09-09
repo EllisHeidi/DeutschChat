@@ -24,7 +24,7 @@
     var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
 
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 }
 
 :root {
@@ -33,8 +33,14 @@
   --foreground: var(--color-ink);
 
   /* Raised surfaces: cards, sheets, inputs */
-  --surface: var(--color-soft-white);
+  --surface: #ffffff;
   --surface-foreground: var(--color-ink);
+
+  /* Ink "hero" surface — the black feature cards (A1 level, level roadmap) */
+  --ink-surface: var(--color-ink);
+  --ink-surface-foreground: #f7f2e7;
+  --ink-surface-muted: #a7a094;
+  --ink-surface-border: #2e2c28;
 
   /* Secondary / recessed surfaces and dividers */
   --muted: #ece6d9;
@@ -72,6 +78,11 @@
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
 
+  --color-ink-surface: var(--ink-surface);
+  --color-ink-surface-foreground: var(--ink-surface-foreground);
+  --color-ink-surface-muted: var(--ink-surface-muted);
+  --color-ink-surface-border: var(--ink-surface-border);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
@@ -96,8 +107,8 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
 }
 
 @layer base {

@@ -16,6 +16,18 @@ export const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1"] as const;
 /** Levels that are free forever. */
 export const FREE_CEFR_LEVELS = ["A1"] as const;
 
+/**
+ * German display names, mirroring `levels.name`. Kept here too so the app has
+ * them before Supabase is connected.
+ */
+export const CEFR_LEVEL_NAME: Record<CefrLevel, string> = {
+  A1: "Anfänger",
+  A2: "Grundstufe",
+  B1: "Mittelstufe",
+  B2: "Fortgeschrittene",
+  C1: "Fachkundige Sprachkenntnisse",
+};
+
 export function isCefrLevel(value: string): value is CefrLevel {
   return (CEFR_LEVELS as readonly string[]).includes(value);
 }

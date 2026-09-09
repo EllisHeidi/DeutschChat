@@ -1,11 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { BookmarkPlus, Check } from "lucide-react";
+import { BookmarkPlus, Check, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { GermanText } from "@/components/ui/typography";
-import { AudioButton } from "@/components/speaking/audio-button";
 import type { VocabularyItem } from "@/components/vocabulary/types";
 
 type VocabularyDetailProps = {
@@ -13,6 +11,8 @@ type VocabularyDetailProps = {
   saved?: boolean;
   onToggleSave?: () => void;
   onPlayAudio?: () => void;
+  /** Hide the save action (e.g. inside a lesson, where tracking is automatic). */
+  showSave?: boolean;
   className?: string;
 };
 
@@ -22,47 +22,77 @@ function VocabularyDetail({
   saved = false,
   onToggleSave,
   onPlayAudio,
+  showSave = true,
   className,
 }: VocabularyDetailProps) {
   return (
-    <div className={cn("space-y-3", className)}>
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <GermanText as="p" className="text-lg font-semibold">
+    <div className={cn("space-y-3.5", className)}>
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <GermanText as="p" className="text-xl leading-none font-semibold">
             {item.word}
           </GermanText>
-          <p className="text-muted-foreground text-sm">{item.translation}</p>
+          <button
+            type="button"
+            onClick={onPlayAudio}
+            aria-label={`„${item.word}“ anhören`}
+            title={`„${item.word}“ anhören`}
+            className="text-primary hover:bg-primary/10 focus-visible:ring-ring grid size-7 shrink-0 place-items-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none"
+          >
+            <Volume2 className="size-4" aria-hidden />
+          </button>
         </div>
-        <AudioButton
-          size="icon"
-          variant="ghost"
-          onClick={onPlayAudio}
-          label={`„${item.word}“ anhören`}
-        />
+        {item.pronunciation ? (
+          <p className="text-muted-foreground text-xs">{item.pronunciation}</p>
+        ) : null}
       </div>
 
-      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
-        {item.baseForm ? (
-          <>
-            <dt className="text-muted-foreground">Grundform</dt>
-            <dd>
-              <GermanText>{item.baseForm}</GermanText>
-            </dd>
-          </>
-        ) : null}
-        <dt className="text-muted-foreground">Wortart</dt>
-        <dd className="text-foreground">{item.partOfSpeech}</dd>
-        {item.pronunciation ? (
-          <>
-            <dt className="text-muted-foreground">Aussprache</dt>
-            <dd className="text-foreground">{item.pronunciation}</dd>
-          </>
-        ) : null}
-      </dl>
+      <div className="space-y-1">
+        <p className="text-foreground text-sm">{item.translation}</p>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="border-border-strong text-muted-foreground rounded-full border px-1.5 py-0.5 text-[0.625rem] font-medium">
+            {item.partOfSpeech}
+          </span>
+          {item.baseForm && item.baseForm !== item.word ? (
+            <span className="text-muted-foreground text-xs">
+              Grundform: <GermanText as="span">{item.baseForm}</GermanText>
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      {showSave ? (
+        <button
+          type="button"
+          onClick={onToggleSave}
+          aria-pressed={saved}
+          className={cn(
+            "focus-visible:ring-ring focus-visible:ring-offset-surface inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+            saved
+              ? "border-border-strong text-muted-foreground border"
+              : "bg-accent text-accent-foreground hover:bg-accent-strong hover:text-primary-foreground",
+          )}
+        >
+          {saved ? (
+            <>
+              <Check className="size-4" aria-hidden />
+              Gespeichert
+            </>
+          ) : (
+            <>
+              <BookmarkPlus className="size-4" aria-hidden />
+              Wort speichern
+            </>
+          )}
+        </button>
+      ) : null}
 
       {item.exampleSentence ? (
-        <div className="bg-muted/50 rounded-lg p-2.5">
-          <GermanText as="p" className="text-sm">
+        <div className="border-border border-t pt-3">
+          <p className="text-muted-foreground text-[0.6875rem] font-semibold tracking-wide uppercase">
+            Beispiel
+          </p>
+          <GermanText as="p" className="mt-1 text-sm">
             {item.exampleSentence}
           </GermanText>
           {item.exampleTranslation ? (
@@ -72,26 +102,6 @@ function VocabularyDetail({
           ) : null}
         </div>
       ) : null}
-
-      <Button
-        variant={saved ? "secondary" : "primary"}
-        size="sm"
-        className="w-full"
-        onClick={onToggleSave}
-        aria-pressed={saved}
-      >
-        {saved ? (
-          <>
-            <Check aria-hidden />
-            Gespeichert
-          </>
-        ) : (
-          <>
-            <BookmarkPlus aria-hidden />
-            Wort speichern
-          </>
-        )}
-      </Button>
     </div>
   );
 }

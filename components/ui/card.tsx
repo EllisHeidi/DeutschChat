@@ -9,6 +9,7 @@ const cardVariants = cva("rounded-xl border transition-colors", {
       muted: "border-border bg-muted/60 text-foreground",
       accent: "border-accent/35 bg-accent/10 text-foreground",
       outline: "border-border-strong bg-transparent text-foreground",
+      ink: "border-ink-surface-border bg-ink-surface text-ink-surface-foreground",
     },
     interactive: {
       true: "hover:border-border-strong hover:shadow-[0_1px_2px_hsl(var(--shadow-color)/0.06),0_8px_24px_-12px_hsl(var(--shadow-color)/0.14)]",

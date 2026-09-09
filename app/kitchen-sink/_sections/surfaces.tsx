@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import {
+  BarChart3,
   BookOpen,
   Home,
   MessageCircle,
   Search,
   Settings,
-  TrendingUp,
 } from "lucide-react";
 import {
   Card,
@@ -146,7 +146,7 @@ export function CardsSection() {
             value="—"
             hint="Noch keine"
           />
-          <StatCard icon={TrendingUp} label="Serie" value="0 Tage" />
+          <StatCard icon={BarChart3} label="Serie" value="0 Tage" />
           <StatCard label="Lektionen" value="0 / 12" />
         </div>
       </Subsection>
@@ -296,7 +296,7 @@ const navItems: NavItem[] = [
   { key: "home", label: "Start", icon: Home, href: "#nav" },
   { key: "learn", label: "Lernen", icon: BookOpen, href: "#nav" },
   { key: "chat", label: "Chat", icon: MessageCircle, href: "#nav" },
-  { key: "progress", label: "Fortschritt", icon: TrendingUp, href: "#nav" },
+  { key: "progress", label: "Fortschritt", icon: BarChart3, href: "#nav" },
 ];
 
 export function NavigationSection() {

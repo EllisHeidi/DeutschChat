@@ -1,5 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-
 /** Presentation types for learning UI. Not the eventual persisted schema. */
 
 export type LessonStatus = "locked" | "available" | "in-progress" | "completed";
@@ -29,7 +27,6 @@ export type SkillKey =
 export type SkillProgressModel = {
   key: SkillKey;
   label: string;
-  icon: LucideIcon;
   /** null = no data yet (Phase 1 default). */
   value: number | null;
 };

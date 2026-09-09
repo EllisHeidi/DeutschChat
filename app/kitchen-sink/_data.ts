@@ -82,9 +82,9 @@ export const demoLessons: LessonSummary[] = [
 ];
 
 export const demoSkills: SkillProgressModel[] = [
-  { key: "vocabulary", label: "Wortschatz", icon: BookOpen, value: null },
-  { key: "listening", label: "Hören", icon: Headphones, value: null },
-  { key: "speaking", label: "Sprechen", icon: Mic, value: null },
+  { key: "vocabulary", label: "Wortschatz", value: null },
+  { key: "listening", label: "Hören", value: null },
+  { key: "speaking", label: "Sprechen", value: null },
 ];
 
 export const demoConversation: ChatMessageModel[] = [

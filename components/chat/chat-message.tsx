@@ -42,9 +42,9 @@ function ChatMessage({
       >
         <div
           className={cn(
-            "rounded-2xl px-3.5 py-2 text-sm",
+            "rounded-2xl px-3.5 py-2.5 text-sm",
             isUser
-              ? "bg-primary text-primary-foreground rounded-br-sm"
+              ? "bg-ink-surface text-ink-surface-foreground rounded-br-sm"
               : "border-border bg-surface text-surface-foreground rounded-bl-sm border",
           )}
         >
@@ -52,9 +52,9 @@ function ChatMessage({
             as="p"
             className={cn(
               "whitespace-pre-wrap",
-              // GermanText defaults to ink `text-foreground`; on the red user
-              // bubble that fails contrast, so force soft-white there.
-              isUser && "text-primary-foreground",
+              // GermanText defaults to ink `text-foreground`; on the dark user
+              // bubble that fails contrast, so force the light ink foreground.
+              isUser && "text-ink-surface-foreground",
             )}
           >
             {message.content}

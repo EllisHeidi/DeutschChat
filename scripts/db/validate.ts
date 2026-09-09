@@ -78,6 +78,75 @@ async function main() {
       levels.slice(1).every((l) => !l.is_free),
   );
 
+  // --- curriculum seed (content/curriculum -> supabase/seed.sql) --------
+  const counts = (
+    await db.pg.query<{ tbl: string; n: number }>(
+      `select 'vocabulary' as tbl, count(*)::int n from public.vocabulary
+       union all select 'grammar_points', count(*)::int from public.grammar_points
+       union all select 'grammar_examples', count(*)::int from public.grammar_examples
+       union all select 'units', count(*)::int from public.units
+       union all select 'lessons', count(*)::int from public.lessons
+       union all select 'lesson_items', count(*)::int from public.lesson_items
+       union all select 'lesson_item_vocabulary', count(*)::int from public.lesson_item_vocabulary
+       union all select 'lesson_item_grammar', count(*)::int from public.lesson_item_grammar`,
+    )
+  ).rows;
+  const c = Object.fromEntries(counts.map((r) => [r.tbl, r.n]));
+  check(
+    "A1.1 unit seeded with 4 published lessons",
+    (
+      await db.pg.query<{ n: number }>(
+        `select count(*)::int n from public.lessons l
+         join public.units u on u.id = l.unit_id
+         where u.slug = 'erste-schritte' and l.is_published`,
+      )
+    ).rows[0]!.n === 4,
+  );
+  check("vocabulary seeded", (c.vocabulary ?? 0) >= 20, `${c.vocabulary} rows`);
+  check(
+    "grammar points seeded",
+    (c.grammar_points ?? 0) === 4,
+    `${c.grammar_points} rows`,
+  );
+  check(
+    "grammar examples seeded",
+    (c.grammar_examples ?? 0) >= 8,
+    `${c.grammar_examples} rows`,
+  );
+  check(
+    "lesson items seeded",
+    (c.lesson_items ?? 0) >= 30,
+    `${c.lesson_items} rows`,
+  );
+  check(
+    "lesson<->vocabulary and lesson<->grammar links seeded",
+    (c.lesson_item_vocabulary ?? 0) > 0 && (c.lesson_item_grammar ?? 0) > 0,
+    `${c.lesson_item_vocabulary} vocab / ${c.lesson_item_grammar} grammar links`,
+  );
+  check(
+    "every lesson_items.content parses (jsonb objects, not null)",
+    (
+      await db.pg.query<{ n: number }>(
+        "select count(*)::int n from public.lesson_items where jsonb_typeof(content) <> 'object'",
+      )
+    ).rows[0]!.n === 0,
+  );
+
+  // running the generated seed twice must not duplicate rows
+  const { readFileSync } = await import("node:fs");
+  const path = await import("node:path");
+  const seedPath = path.join(process.cwd(), "supabase", "seed.sql");
+  await db.pg.exec(readFileSync(seedPath, "utf8"));
+  const vocabAfter = (
+    await db.pg.query<{ n: number }>(
+      "select count(*)::int n from public.vocabulary",
+    )
+  ).rows[0]!.n;
+  check(
+    "seed is idempotent (re-run adds nothing)",
+    vocabAfter === c.vocabulary,
+  );
+
   // --- new-user bootstrap ---------------------------------------------
   const alice = await db.createUser({ display_name: "Alice" });
   const bob = await db.createUser();
@@ -163,22 +232,34 @@ async function main() {
         "select count(*)::int as n from public.levels",
       )
     ).rows[0]!.n,
-    publishedUnits: (
+    unitSlugs: (
+      await tx.query<{ slug: string }>(
+        "select slug from public.units order by slug",
+      )
+    ).rows.map((r) => r.slug),
+    ersteSchritteLessons: (
       await tx.query<{ n: number }>(
-        "select count(*)::int as n from public.units",
+        `select count(*)::int as n from public.lessons l
+         join public.units u on u.id = l.unit_id where u.slug = 'erste-schritte'`,
       )
     ).rows[0]!.n,
-    scenarios: (
+    ersteSchritteItems: (
       await tx.query<{ n: number }>(
-        "select count(*)::int as n from public.chat_scenarios",
+        `select count(*)::int as n from public.lesson_items i
+         join public.lessons l on l.id = i.lesson_id
+         join public.units u on u.id = l.unit_id where u.slug = 'erste-schritte'`,
       )
     ).rows[0]!.n,
   }));
   check(
     "anon reads reference + published content, not drafts",
     anonView.levels === 5 &&
-      anonView.publishedUnits === 1 &&
-      anonView.scenarios === 1,
+      anonView.unitSlugs.includes("erste-schritte") &&
+      anonView.unitSlugs.includes("val-unit") &&
+      !anonView.unitSlugs.includes("val-draft") &&
+      !anonView.unitSlugs.includes("mein-alltag") &&
+      anonView.ersteSchritteLessons === 4 &&
+      anonView.ersteSchritteItems > 20,
     JSON.stringify(anonView),
   );
 

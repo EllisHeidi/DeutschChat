@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { CardHeading } from "@/components/ui/typography";
 import { EmptyState } from "@/components/common/empty-state";
+import { ILLUSTRATION } from "@/components/icons/raster-icon";
 import { BookOpen } from "lucide-react";
 
 type VocabularyMasteryProps = {
@@ -32,6 +33,7 @@ function VocabularyMastery({ counts, className }: VocabularyMasteryProps) {
         {total === 0 ? (
           <EmptyState
             icon={BookOpen}
+            image={ILLUSTRATION.noWords}
             title="Noch keine Wörter"
             description="Gespeicherte Wörter aus Lektionen und Gesprächen erscheinen hier."
           />
