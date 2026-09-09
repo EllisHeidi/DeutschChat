@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   curriculum,
   findLesson,
+  lessonGrammarSlugs,
   lessonVocabLemmas,
 } from "@/content/curriculum";
 import type {
@@ -133,6 +134,7 @@ export type LessonForPlay = {
   lessonId: string | null;
   vocabByLemma: Record<string, VocabularyItem>;
   vocabLemmas: string[];
+  grammarSlugs: string[];
   /** true when the content came from the live database (not the fallback). */
   fromDatabase: boolean;
 };
@@ -193,6 +195,9 @@ export async function getLessonForPlay(
             vocabLemmas: contentMatch
               ? lessonVocabLemmas(contentMatch.lesson)
               : [],
+            grammarSlugs: contentMatch
+              ? lessonGrammarSlugs(contentMatch.lesson)
+              : [],
             fromDatabase: true,
           };
         }
@@ -214,6 +219,7 @@ export async function getLessonForPlay(
     lessonId: null,
     vocabByLemma: resolveVocab(lesson),
     vocabLemmas: lessonVocabLemmas(contentMatch.lesson),
+    grammarSlugs: lessonGrammarSlugs(contentMatch.lesson),
     fromDatabase: false,
   };
 }

@@ -10,6 +10,7 @@ import { TodayPanel } from "@/components/learning/today-panel";
 import { RecommendedConversation } from "@/components/learning/recommended-conversation";
 import { VocabularyMastery } from "@/components/progress/vocabulary-mastery";
 import {
+  ConnectionErrorNotice,
   SetupNotice,
   SignInNotice,
 } from "@/components/learning/connection-notice";
@@ -71,6 +72,8 @@ export default async function DashboardPage() {
           <div className="space-y-7 xl:col-span-2">
             {!s.supabaseConfigured ? (
               <SetupNotice />
+            ) : s.supabaseError ? (
+              <ConnectionErrorNotice />
             ) : !s.signedIn ? (
               <SignInNotice />
             ) : null}

@@ -263,6 +263,97 @@ async function main() {
     JSON.stringify(anonView),
   );
 
+  // --- skill / grammar / observation isolation ------------------------
+  const grammarPointId = (
+    await db.pg.query<{ id: string }>(
+      "select id from public.grammar_points limit 1",
+    )
+  ).rows[0]!.id;
+  const vocabularyId = (
+    await db.pg.query<{ id: string }>(
+      "select id from public.vocabulary limit 1",
+    )
+  ).rows[0]!.id;
+
+  await db.asUser(alice, async (tx) => {
+    await tx.query(
+      `insert into public.user_skill_progress (user_id, skill_key, level_code, score)
+       values ($1, 'grammar', 'A1', 40)`,
+      [alice],
+    );
+    await tx.query(
+      `insert into public.user_grammar_progress (user_id, grammar_point_id, status)
+       values ($1, $2, 'learning')`,
+      [alice, grammarPointId],
+    );
+    await tx.query(
+      `insert into public.learning_observations (user_id, source, result, vocabulary_id)
+       values ($1, 'lesson', 'correct', $2)`,
+      [alice, vocabularyId],
+    );
+  });
+
+  const bobPrivateRows = await db.asUser(bob, async (tx) => ({
+    skill: (
+      await tx.query<{ n: number }>(
+        "select count(*)::int n from public.user_skill_progress",
+      )
+    ).rows[0]!.n,
+    grammar: (
+      await tx.query<{ n: number }>(
+        "select count(*)::int n from public.user_grammar_progress",
+      )
+    ).rows[0]!.n,
+    observations: (
+      await tx.query<{ n: number }>(
+        "select count(*)::int n from public.learning_observations",
+      )
+    ).rows[0]!.n,
+  }));
+  check(
+    "skill / grammar / observation rows are owner-only",
+    bobPrivateRows.skill === 0 &&
+      bobPrivateRows.grammar === 0 &&
+      bobPrivateRows.observations === 0,
+    JSON.stringify(bobPrivateRows),
+  );
+
+  // --- CHAT INDEPENDENCE: zero learning progress must not block Chat --
+  let freshUserCanChat = false;
+  const carol = await db.createUser();
+  await db.asUser(carol, async (tx) => {
+    const conv = (
+      await tx.query<{ id: string }>(
+        "insert into public.conversations (user_id) values ($1) returning id",
+        [carol],
+      )
+    ).rows[0]!.id;
+    await tx.query(
+      `insert into public.conversation_messages (conversation_id, user_id, sender, content, sequence)
+       values ($1, $2, 'user', 'Hallo!', 1)`,
+      [conv, carol],
+    );
+    freshUserCanChat = true;
+  });
+  const carolHasNoProgress =
+    (
+      await db.pg.query<{ n: number }>(
+        "select count(*)::int n from public.user_lesson_progress where user_id = $1",
+        [carol],
+      )
+    ).rows[0]!.n === 0;
+  check(
+    "a brand-new user with 0 lesson progress can start a conversation",
+    freshUserCanChat && carolHasNoProgress,
+  );
+
+  const bobSeesCarolChat = await db.asUser(bob, (tx) =>
+    tx
+      .query<{ n: number }>("select count(*)::int n from public.conversations")
+      .then((r) => r.rows[0]!.n),
+  );
+  check("conversations are owner-only", bobSeesCarolChat === 0);
+
   await db.close();
 
   console.log(

@@ -27,6 +27,7 @@ export type LessonPlayerProps = {
   vocab: Record<string, VocabularyItem>;
   lessonId: string | null;
   vocabLemmas: string[];
+  grammarSlugs?: string[];
   /** Persist progress to the database (false for demo / signed-out preview). */
   persist: boolean;
   /** Called instead of routing when the lesson finishes (used by the demo). */
@@ -42,6 +43,7 @@ export function LessonPlayer({
   vocab,
   lessonId,
   vocabLemmas,
+  grammarSlugs = [],
   persist,
   onFinished,
   onExit,
@@ -88,8 +90,10 @@ export function LessonPlayer({
           lessonId,
           unitSlug: lesson.unitSlug,
           lessonSlug: lesson.lessonSlug,
+          levelCode: lesson.levelCode,
           estimatedMinutes: lesson.estimatedMinutes,
           vocabLemmas,
+          grammarSlugs,
           results: all,
         }).then((r) => setSavedScore(r.score));
       }

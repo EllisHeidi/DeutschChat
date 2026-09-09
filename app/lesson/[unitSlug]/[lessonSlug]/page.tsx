@@ -30,6 +30,7 @@ export default async function LessonPage({ params }: { params: Params }) {
       vocab={data.vocabByLemma}
       lessonId={data.lessonId}
       vocabLemmas={data.vocabLemmas}
+      grammarSlugs={data.grammarSlugs}
       persist={persist}
       continueHref="/learn"
     />

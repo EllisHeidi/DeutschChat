@@ -6,10 +6,13 @@ import { createClient } from "@/lib/supabase/server";
 import {
   computeLessonScore,
   dailyActivityForLesson,
+  grammarStatusAfterOutcomes,
+  nudgeSkillScore,
   vocabStatusAfterExposure,
   type ItemOutcome,
 } from "@/lib/learning/progress";
 import type { SupportedItemType } from "@/content/curriculum/types";
+import type { CefrLevel } from "@/lib/learning/cefr";
 import type { Enums } from "@/lib/supabase/types";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -20,8 +23,10 @@ export type CompleteLessonInput = {
   lessonId: string | null;
   unitSlug: string;
   lessonSlug: string;
+  levelCode: CefrLevel;
   estimatedMinutes: number;
   vocabLemmas: string[];
+  grammarSlugs: string[];
   results: LessonItemResult[];
 };
 
@@ -147,6 +152,99 @@ export async function completeLesson(
             last_reviewed_at: now,
           })
           .eq("id", vp.id);
+      }
+    }
+  }
+
+  // skill progress: one rolling score per (skill, level) the lesson touched
+  const bySkill = new Map<
+    Enums<"skill_key">,
+    { correct: number; total: number }
+  >();
+  for (const r of input.results) {
+    const skill = skillForItem(r.itemType);
+    if (!skill) continue;
+    const agg = bySkill.get(skill) ?? { correct: 0, total: 0 };
+    agg.total += 1;
+    if (r.correct) agg.correct += 1;
+    bySkill.set(skill, agg);
+  }
+  for (const [skill, agg] of bySkill) {
+    const skillScore =
+      agg.total > 0 ? Math.round((agg.correct / agg.total) * 100) : score;
+    const { data: existing } = await supabase
+      .from("user_skill_progress")
+      .select("id, score, activity_count")
+      .eq("user_id", user.id)
+      .eq("skill_key", skill)
+      .eq("level_code", input.levelCode)
+      .maybeSingle();
+
+    if (!existing) {
+      await supabase.from("user_skill_progress").insert({
+        user_id: user.id,
+        skill_key: skill,
+        level_code: input.levelCode,
+        score: nudgeSkillScore(0, skillScore),
+        activity_count: 1,
+        last_activity_at: now,
+      });
+    } else {
+      await supabase
+        .from("user_skill_progress")
+        .update({
+          score: nudgeSkillScore(existing.score, skillScore),
+          activity_count: existing.activity_count + 1,
+          last_activity_at: now,
+        })
+        .eq("id", existing.id);
+    }
+  }
+
+  // grammar progress: the lesson's grammar points, judged on this run's answers
+  if (input.grammarSlugs.length > 0) {
+    const graded = input.results.filter(
+      (r) => r.interactive && skillForItem(r.itemType) === "grammar",
+    );
+    const correct = graded.filter((r) => r.correct).length;
+    const incorrect = graded.length - correct;
+
+    const { data: points } = await supabase
+      .from("grammar_points")
+      .select("id, slug")
+      .in("slug", input.grammarSlugs);
+
+    for (const p of points ?? []) {
+      const { data: gp } = await supabase
+        .from("user_grammar_progress")
+        .select("id, status, success_count, error_count")
+        .eq("user_id", user.id)
+        .eq("grammar_point_id", p.id)
+        .maybeSingle();
+
+      if (!gp) {
+        await supabase.from("user_grammar_progress").insert({
+          user_id: user.id,
+          grammar_point_id: p.id,
+          status: grammarStatusAfterOutcomes(null, correct, incorrect),
+          success_count: correct,
+          error_count: incorrect,
+          last_practiced_at: now,
+        });
+      } else {
+        await supabase
+          .from("user_grammar_progress")
+          .update({
+            status: grammarStatusAfterOutcomes(
+              gp.status,
+              gp.success_count + correct,
+              gp.error_count + incorrect,
+            ),
+            success_count: gp.success_count + correct,
+            error_count: gp.error_count + incorrect,
+            last_practiced_at: now,
+          })
+          .eq("id", gp.id);
       }
     }
   }

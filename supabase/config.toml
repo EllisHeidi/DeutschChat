@@ -9,6 +9,13 @@ major_version = 16
 [db.migrations]
 schema_paths = []
 
+# Curriculum content (units/lessons/items/vocabulary/grammar). Schema + the
+# levels/skills reference rows live in the migrations themselves.
+#   npx supabase db push --include-seed   # migrations + this seed, idempotent
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
 # Local development stack (only used if you run `supabase start` with Docker).
 # The project targets a hosted Supabase instance; local is optional.
 [api]
@@ -21,11 +28,18 @@ enabled = true
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["http://localhost:3000/**"]
+# For local dev. Hosted auth URLs are set in the Supabase dashboard
+# (Authentication -> URL Configuration): add the production origin and
+# `<origin>/auth/callback` to the redirect allow-list.
+site_url = "env(NEXT_PUBLIC_SITE_URL)"
+additional_redirect_urls = [
+  "http://localhost:3000/**",
+  "http://localhost:3000/auth/callback",
+]
 jwt_expiry = 3600
 enable_signup = true
 
 [auth.email]
 enable_signup = true
+# Confirmation on by default. Turn off in the dashboard for faster dev testing.
 enable_confirmations = true

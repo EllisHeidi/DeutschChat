@@ -14,13 +14,14 @@ export const metadata = { title: "Fortschritt" };
 
 export default async function ProgressPage() {
   const s = await getLearnerSnapshot();
+  const sk = s.skills;
 
   const skills: SkillProgressModel[] = [
-    { key: "vocabulary", label: "Wortschatz", value: null },
-    { key: "grammar", label: "Grammatik", value: null },
-    { key: "listening", label: "Hören", value: null },
-    { key: "speaking", label: "Sprechen", value: null },
-    { key: "writing", label: "Schreiben", value: null },
+    { key: "vocabulary", label: "Wortschatz", value: sk?.vocabulary ?? null },
+    { key: "grammar", label: "Grammatik", value: sk?.grammar ?? null },
+    { key: "listening", label: "Hören", value: sk?.listening ?? null },
+    { key: "speaking", label: "Sprechen", value: sk?.speaking ?? null },
+    { key: "writing", label: "Schreiben", value: sk?.writing ?? null },
   ];
 
   return (

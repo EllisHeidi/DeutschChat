@@ -23,7 +23,8 @@
     "db:diff": "supabase db diff",
     "db:types": "supabase gen types typescript --linked --schema public > types/database.ts",
     "db:seed": "tsx scripts/db/generate-seed.ts",
-    "db:validate": "tsx scripts/db/validate.ts"
+    "db:validate": "tsx scripts/db/validate.ts",
+    "db:check": "tsx scripts/db/check-connection.ts"
   },
   "dependencies": {
     "@radix-ui/react-popover": "^1.1.23",

@@ -4,6 +4,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import { getOptionalUser } from "@/lib/auth/user";
 import { CEFR_LEVEL_NAME, type CefrLevel } from "@/lib/learning/cefr";
+import type { SkillKey } from "@/components/learning/types";
 import { curriculum } from "@/content/curriculum";
 import {
   firstAvailableLesson,
@@ -27,6 +28,8 @@ export type TodayActivity = {
 
 export type LearnerSnapshot = {
   supabaseConfigured: boolean;
+  /** A Supabase request failed at runtime (network / schema / auth issue). */
+  supabaseError: boolean;
   signedIn: boolean;
   displayName: string | null;
   levelCode: CefrLevel;
@@ -38,6 +41,17 @@ export type LearnerSnapshot = {
   continue: ContinueTarget | null;
   vocab: { new: number; learning: number; known: number } | null;
   today: TodayActivity | null;
+  /** 0–100 per skill for the current level; null = no data yet. */
+  skills: Record<SkillKey, number | null> | null;
+};
+
+const NO_SKILLS: Record<SkillKey, number | null> = {
+  reading: null,
+  listening: null,
+  writing: null,
+  speaking: null,
+  vocabulary: null,
+  grammar: null,
 };
 
 /** Ordered list of available lessons across the published curriculum. */
@@ -67,6 +81,7 @@ export async function getLearnerSnapshot(): Promise<LearnerSnapshot> {
   const levelCode: CefrLevel = "A1";
   const base: LearnerSnapshot = {
     supabaseConfigured: configured,
+    supabaseError: false,
     signedIn: false,
     displayName: null,
     levelCode,
@@ -77,6 +92,7 @@ export async function getLearnerSnapshot(): Promise<LearnerSnapshot> {
     continue: null,
     vocab: null,
     today: null,
+    skills: null,
   };
 
   const first = firstAvailableLesson();
@@ -85,15 +101,22 @@ export async function getLearnerSnapshot(): Promise<LearnerSnapshot> {
   const user = await getOptionalUser();
   if (!user) return base;
 
+  try {
+    return await loadSignedInSnapshot(base, user.id);
+  } catch (error) {
+    console.error("[dashboard] Supabase read failed:", error);
+    return { ...base, supabaseError: true };
+  }
+}
+
+async function loadSignedInSnapshot(
+  base: LearnerSnapshot,
+  userId: string,
+): Promise<LearnerSnapshot> {
+  const user = { id: userId };
   const supabase = await createClient();
 
-  const [
-    { data: learner },
-    { data: profile },
-    { data: progressRows },
-    { data: vocabRows },
-    { data: recentActivity },
-  ] = await Promise.all([
+  const results = await Promise.all([
     supabase
       .from("learner_profiles")
       .select("current_level")
@@ -118,9 +141,32 @@ export async function getLearnerSnapshot(): Promise<LearnerSnapshot> {
       .eq("user_id", user.id)
       .order("activity_date", { ascending: false })
       .limit(60),
+    supabase
+      .from("user_skill_progress")
+      .select("skill_key, level_code, score")
+      .eq("user_id", user.id),
   ]);
 
+  const firstError = results.find((r) => r.error)?.error;
+  if (firstError) throw new Error(firstError.message);
+
+  const [
+    { data: learner },
+    { data: profile },
+    { data: progressRows },
+    { data: vocabRows },
+    { data: recentActivity },
+    { data: skillRows },
+  ] = results;
+
   const current = (learner?.current_level ?? "A1") as CefrLevel;
+
+  const skills = { ...NO_SKILLS };
+  for (const row of skillRows ?? []) {
+    if (row.level_code === current) {
+      skills[row.skill_key as SkillKey] = row.score;
+    }
+  }
 
   const completedLessonIds = new Set(
     (progressRows ?? [])
@@ -178,6 +224,7 @@ export async function getLearnerSnapshot(): Promise<LearnerSnapshot> {
       vocabReviewed: activity?.vocab_reviewed ?? 0,
       minutesSpent: activity?.minutes_spent ?? 0,
     },
+    skills,
   };
 }
 

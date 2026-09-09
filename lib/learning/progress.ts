@@ -1,4 +1,4 @@
-import type { VocabStatus } from "@/lib/learning/mastery";
+import type { GrammarStatus, VocabStatus } from "@/lib/learning/mastery";
 
 /**
  * Pure progress / completion rules. No database, no framework — just the logic
@@ -52,6 +52,37 @@ export function vocabStatusAfterExposure(
 ): VocabStatus {
   if (current === null || current === "new") return "learning";
   return current;
+}
+
+/**
+ * Move a rolling skill score toward the latest lesson score. A gentle pull
+ * (25%) so one lesson can't swing the whole level, and it never regresses on a
+ * good result. This is a foundation, not the final adaptive engine.
+ */
+export function nudgeSkillScore(current: number, lessonScore: number): number {
+  const pulled = Math.round(current + (lessonScore - current) * 0.25);
+  const next = lessonScore >= current ? Math.max(current, pulled) : pulled;
+  return Math.max(0, Math.min(100, next));
+}
+
+/**
+ * Grammar status after a batch of outcomes touching one grammar point.
+ * `new`/`learning` climb toward `mastered` on repeated success and drop to
+ * `weak` on repeated failure. `mastered` only slips to `weak` if the user
+ * actually got it wrong this time.
+ */
+export function grammarStatusAfterOutcomes(
+  current: GrammarStatus | null,
+  correct: number,
+  incorrect: number,
+): GrammarStatus {
+  const base = current ?? "new";
+  if (incorrect > correct) return "weak";
+  if (correct === 0) return base === "new" ? "learning" : base;
+  if (base === "mastered") return "mastered";
+  if (base === "new") return "learning";
+  // learning | weak, climbing
+  return correct >= 2 && incorrect === 0 ? "mastered" : "learning";
 }
 
 export type DailyActivityDelta = {

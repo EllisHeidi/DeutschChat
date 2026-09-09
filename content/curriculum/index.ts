@@ -52,3 +52,12 @@ export function lessonVocabLemmas(lesson: ContentLesson): string[] {
   }
   return [...set];
 }
+
+/** Distinct grammar-point slugs referenced anywhere in a lesson's items. */
+export function lessonGrammarSlugs(lesson: ContentLesson): string[] {
+  const set = new Set<string>();
+  for (const item of lesson.items) {
+    for (const slug of item.grammar ?? []) set.add(slug);
+  }
+  return [...set];
+}

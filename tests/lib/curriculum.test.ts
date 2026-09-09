@@ -4,6 +4,7 @@ import {
   findGrammar,
   findLesson,
   findVocab,
+  lessonGrammarSlugs,
   lessonVocabLemmas,
 } from "@/content/curriculum";
 import { getDemoLesson } from "@/content/curriculum/demo";
@@ -105,6 +106,14 @@ describe("content integrity", () => {
     const lemmas = lessonVocabLemmas(lesson);
     expect(lemmas).toContain("heißen");
     expect(lemmas).toContain("wohnen");
+  });
+
+  it("lessonGrammarSlugs collects distinct grammar references that all resolve", () => {
+    const { lesson } = findLesson("erste-schritte", "sich-vorstellen")!;
+    const slugs = lessonGrammarSlugs(lesson);
+    expect(slugs.length).toBeGreaterThan(0);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const slug of slugs) expect(findGrammar(slug)).toBeTruthy();
   });
 });
 
