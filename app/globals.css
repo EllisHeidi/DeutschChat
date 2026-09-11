@@ -121,6 +121,12 @@
     text-size-adjust: 100%;
   }
 
+  /* Buttons/links keep their own hover/active states — no default mobile tap flash */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
