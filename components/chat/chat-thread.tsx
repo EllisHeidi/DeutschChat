@@ -34,21 +34,21 @@ function EmptyState() {
     <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-8 text-center">
       <RasterIcon src={ILLUSTRATION.noConversations} className="h-16 w-auto" />
       <p className="text-muted-foreground max-w-xs text-xs">
-        Schreib einfach los — auf Deutsch oder Englisch, ganz wie du magst. Lena
-        antwortet dir auf Deutsch.
+        Just start writing — in German or English, whichever you like. Lena will
+        reply in German.
       </p>
       <div className="border-accent/35 bg-accent/10 max-w-xs rounded-xl border p-3 text-left">
         <div className="flex items-center gap-2">
           <p className="text-foreground text-xs font-semibold">
-            Chat ist immer offen
+            Chat is always open
           </p>
           <Badge variant="free" size="sm">
-            unabhängig
+            independent
           </Badge>
         </div>
         <p className="text-muted-foreground mt-1 text-[0.6875rem] leading-relaxed">
-          Du brauchst keine abgeschlossene Lektion. Was du hier übst fließt
-          trotzdem in dein Lernprofil ein.
+          You don&apos;t need a completed lesson. What you practice here still
+          feeds into your learning profile.
         </p>
       </div>
     </div>
