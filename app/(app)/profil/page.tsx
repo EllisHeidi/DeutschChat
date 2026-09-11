@@ -140,11 +140,16 @@ export default async function ProfilePage() {
             Lektionen und Chat kannst du auch ohne Konto ausprobieren. Für
             gespeicherten Fortschritt brauchst du eins.
           </p>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Button asChild size="xl" className="flex-1">
+          <div className="flex flex-row gap-2">
+            <Button asChild size="xl" className="flex-1 px-3">
               <Link href="/registrieren">Konto erstellen</Link>
             </Button>
-            <Button asChild size="xl" variant="secondary" className="flex-1">
+            <Button
+              asChild
+              size="xl"
+              variant="secondary"
+              className="flex-1 px-3"
+            >
               <Link href="/anmelden">Anmelden</Link>
             </Button>
           </div>
