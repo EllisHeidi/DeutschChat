@@ -29,7 +29,7 @@ const COPY: Record<
     submit: "Anmelden",
     switchText: "Noch kein Konto?",
     switchHref: "/registrieren",
-    switchCta: "Registrieren",
+    switchCta: "Konto erstellen",
   },
   signup: {
     title: "Konto erstellen",
