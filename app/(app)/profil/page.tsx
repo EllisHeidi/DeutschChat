@@ -135,20 +135,20 @@ export default async function ProfilePage() {
           </form>
         </>
       ) : (
-        <div className="border-border bg-surface space-y-3 rounded-xl border p-5 text-center">
+        <div className="border-border bg-surface space-y-3 rounded-xl border px-5 py-9 text-center sm:py-5">
           <p className="text-muted-foreground text-sm">
             Lektionen und Chat kannst du auch ohne Konto ausprobieren. Für
             gespeicherten Fortschritt brauchst du eins.
           </p>
-          <div className="flex flex-row gap-2">
-            <Button asChild size="xl" className="flex-1 px-3">
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button asChild size="xl" className="flex-1 px-4 sm:px-1.5">
               <Link href="/registrieren">Konto erstellen</Link>
             </Button>
             <Button
               asChild
               size="xl"
               variant="secondary"
-              className="flex-1 px-3"
+              className="flex-1 px-4 sm:px-1.5"
             >
               <Link href="/anmelden">Anmelden</Link>
             </Button>
