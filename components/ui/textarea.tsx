@@ -5,9 +5,16 @@ type TextareaProps = React.ComponentProps<"textarea"> & {
   invalid?: boolean;
 };
 
-function Textarea({ className, invalid, rows = 4, ...props }: TextareaProps) {
+function Textarea({
+  className,
+  invalid,
+  rows = 4,
+  ref,
+  ...props
+}: TextareaProps) {
   return (
     <textarea
+      ref={ref}
       rows={rows}
       aria-invalid={invalid || undefined}
       className={cn(

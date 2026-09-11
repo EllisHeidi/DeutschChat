@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { AlertCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { ChatMessage } from "@/components/chat/chat-message";
 import { ChatInput } from "@/components/chat/chat-input";
 import { TypingIndicator } from "@/components/chat/typing-indicator";
@@ -26,12 +27,26 @@ function toModel(row: ChatMessageRow): ChatMessageModel {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-8 text-center">
       <RasterIcon src={ILLUSTRATION.noConversations} className="h-16 w-auto" />
       <p className="text-muted-foreground max-w-xs text-xs">
         Schreib einfach los — auf Deutsch oder Englisch, ganz wie du magst. Lena
         antwortet dir auf Deutsch.
       </p>
+      <div className="border-accent/35 bg-accent/10 max-w-xs rounded-xl border p-3 text-left">
+        <div className="flex items-center gap-2">
+          <p className="text-foreground text-xs font-semibold">
+            Chat ist immer offen
+          </p>
+          <Badge variant="free" size="sm">
+            unabhängig
+          </Badge>
+        </div>
+        <p className="text-muted-foreground mt-1 text-[0.6875rem] leading-relaxed">
+          Du brauchst keine abgeschlossene Lektion. Was du hier übst fließt
+          trotzdem in dein Lernprofil ein.
+        </p>
+      </div>
     </div>
   );
 }
@@ -51,12 +66,18 @@ export function ChatThread({
   );
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const canRetry =
     error !== null &&
     conversationId !== null &&
     messages.length > 0 &&
     messages[messages.length - 1]!.role === "user";
+
+  React.useEffect(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages.length, pending, error]);
 
   async function handleSend(text: string) {
     setError(null);
@@ -90,8 +111,11 @@ export function ChatThread({
   }
 
   return (
-    <>
-      <div className="bg-background/40 space-y-4 px-4 py-5">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div
+        ref={scrollRef}
+        className="bg-background/40 flex min-h-0 flex-1 flex-col space-y-4 overflow-y-auto px-4 py-4"
+      >
         {messages.length === 0 && !pending ? (
           <EmptyState />
         ) : (
@@ -125,6 +149,6 @@ export function ChatThread({
         ) : null}
       </div>
       <ChatInput disabled={pending} onSend={handleSend} />
-    </>
+    </div>
   );
 }
