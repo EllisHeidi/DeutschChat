@@ -21,7 +21,7 @@ function PasswordInput({ className, ...props }: PasswordInputProps) {
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? "Passwort verbergen" : "Passwort anzeigen"}
         aria-pressed={visible}
-        className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring absolute top-1/2 right-2 grid size-7 -translate-y-1/2 place-items-center rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+        className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring absolute top-1/2 right-2 grid size-7 -translate-y-1/2 appearance-none place-items-center rounded-sm focus-visible:ring-2 focus-visible:outline-none"
       >
         {visible ? (
           <EyeOff className="size-4" aria-hidden />
