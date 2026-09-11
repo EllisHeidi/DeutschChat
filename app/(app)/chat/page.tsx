@@ -1,31 +1,31 @@
 import Link from "next/link";
-import { ChevronLeft, MoreHorizontal, Send } from "lucide-react";
+import { ChevronLeft, MoreHorizontal } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ChatMessage } from "@/components/chat/chat-message";
-import { CorrectionNote } from "@/components/chat/correction-note";
-import { TypingIndicator } from "@/components/chat/typing-indicator";
+import { Button } from "@/components/ui/button";
+import { getOptionalUser } from "@/lib/auth/user";
+import { loadActiveConversation } from "@/lib/chat/data";
+import { ChatThread } from "@/components/chat/chat-thread";
 import { RasterIcon, ILLUSTRATION } from "@/components/icons/raster-icon";
-import type { ChatMessageModel } from "@/components/chat/types";
 
 export const metadata = { title: "Chat" };
 
-const thread: ChatMessageModel[] = [
-  {
-    id: "1",
-    role: "assistant",
-    content: "Hallo! 😊 Wie geht es dir?",
-    time: "09:41",
-    playable: true,
-  },
-  { id: "2", role: "user", content: "Mir geht gut danke!", time: "09:42" },
-];
+/**
+ * Chat is an independent learning surface — it never checks lesson, level or
+ * vocabulary progress, and never redirects based on it. The only requirement
+ * to persist a real conversation is being signed in, exactly like Learn's
+ * progress-saving; a signed-out visitor sees an explanation instead of the
+ * composer, never a lock tied to Learn.
+ */
+export default async function ChatPage() {
+  const user = await getOptionalUser();
+  const { conversationId, messages } = user
+    ? await loadActiveConversation(user.id)
+    : { conversationId: null, messages: [] };
 
-export default function ChatPage() {
   return (
     <div className="space-y-5">
       <div className="border-border bg-surface overflow-hidden rounded-2xl border">
-        {/* conversation header */}
         <div className="border-border flex items-center gap-3 border-b px-3 py-2.5">
           <Link
             href="/"
@@ -49,51 +49,26 @@ export default function ChatPage() {
           </span>
         </div>
 
-        {/* thread */}
-        <div className="bg-background/40 space-y-4 px-4 py-5">
-          <ChatMessage message={thread[0]!} characterInitials="LE" />
-          <ChatMessage
-            message={thread[1]!}
-            footer={
-              <CorrectionNote
-                kind="minor"
-                original="Mir geht gut danke!"
-                suggestion="Mir geht es gut, danke!"
-                note="„gehen“ braucht hier „es“: Mir geht es gut."
-              />
-            }
+        {user ? (
+          <ChatThread
+            initialConversationId={conversationId}
+            initialMessages={messages}
           />
-          <div className="flex items-start gap-2.5">
-            <Avatar initials="LE" size="sm" tone="primary" />
-            <div className="border-border bg-surface rounded-2xl rounded-bl-sm border px-3.5 py-2.5 text-sm">
-              <span lang="de">
-                Und was machst du <span className="vocab-underline">heute</span>
-                ?
-              </span>
-            </div>
+        ) : (
+          <div className="bg-background/40 flex flex-col items-center gap-3 px-4 py-10 text-center">
+            <RasterIcon
+              src={ILLUSTRATION.noConversations}
+              className="h-16 w-auto"
+            />
+            <p className="text-muted-foreground max-w-xs text-sm">
+              Melde dich an, um mit Lena zu chatten. Chat ist unabhängig von
+              deinem Lernfortschritt — du brauchst dafür nur ein Konto.
+            </p>
+            <Button asChild size="lg">
+              <Link href="/anmelden">Anmelden</Link>
+            </Button>
           </div>
-          <TypingIndicator characterName="Lena" characterInitials="LE" />
-        </div>
-
-        {/* composer */}
-        <div className="border-border flex items-center gap-2 border-t p-2.5">
-          <div className="border-border-strong bg-surface text-muted-foreground flex-1 rounded-full border px-4 py-2 text-sm">
-            Nachricht schreiben …
-          </div>
-          <span className="bg-primary/60 text-primary-foreground grid size-9 place-items-center rounded-full">
-            <Send className="size-4" aria-hidden />
-          </span>
-        </div>
-      </div>
-
-      <div className="border-border-strong bg-muted/30 flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-8 text-center">
-        <RasterIcon
-          src={ILLUSTRATION.noConversations}
-          className="h-16 w-auto"
-        />
-        <p className="text-muted-foreground max-w-xs text-xs">
-          Vorschau — echte Gespräche kommen in einem späteren Schritt.
-        </p>
+        )}
       </div>
 
       <div className="border-accent/35 bg-accent/10 rounded-xl border p-4">

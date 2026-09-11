@@ -20,6 +20,8 @@ export const env = createEnv({
       .default("development"),
     // Server-side Supabase access (RLS-bypassing). Never import into client code.
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+    // Chat's AI provider (lib/chat/ai.ts). Never import into client code.
+    OPENAI_API_KEY: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
