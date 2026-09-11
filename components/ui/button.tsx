@@ -12,7 +12,7 @@ const buttonVariants = cva(
         primary:
           "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
         secondary:
-          "border border-border-strong bg-surface text-foreground hover:bg-muted active:bg-muted",
+          "border-2 border-border-strong bg-surface text-foreground hover:bg-muted active:bg-muted",
         ghost: "text-foreground hover:bg-muted active:bg-muted",
         destructive:
           "bg-destructive text-destructive-foreground hover:opacity-90 active:opacity-100",
@@ -22,7 +22,7 @@ const buttonVariants = cva(
         sm: "h-9 px-3",
         md: "h-11 px-5",
         lg: "h-12 px-6 text-base",
-        xl: "h-14 px-7 text-base",
+        xl: "h-16 px-8 text-base",
         icon: "size-11",
       },
     },
