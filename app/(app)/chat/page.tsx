@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { getOptionalUser } from "@/lib/auth/user";
 import { loadActiveConversation } from "@/lib/chat/data";
 import { ChatThread } from "@/components/chat/chat-thread";
-import { RasterIcon, ILLUSTRATION } from "@/components/icons/raster-icon";
+import { ChatMenu } from "@/components/chat/chat-menu";
+import {
+  RasterIcon,
+  ILLUSTRATION,
+  CHARACTER,
+} from "@/components/icons/raster-icon";
 
 export const metadata = { title: "Chat" };
 
@@ -37,7 +42,7 @@ export default async function ChatPage() {
         >
           <ChevronLeft className="size-4" aria-hidden />
         </Link>
-        <Avatar initials="LE" tone="primary" />
+        <Avatar initials="LE" tone="primary" src={CHARACTER.lena} />
         <div className="min-w-0 flex-1">
           <p className="text-foreground truncate text-sm font-semibold">Lena</p>
           <p className="text-muted-foreground flex items-center gap-1 text-xs">
@@ -45,13 +50,18 @@ export default async function ChatPage() {
             Online
           </p>
         </div>
-        <span className="text-muted-foreground grid size-8 place-items-center rounded-md">
-          <MoreHorizontal className="size-4" aria-hidden />
-        </span>
+        {user ? (
+          <ChatMenu hasMessages={messages.length > 0} />
+        ) : (
+          <span className="text-muted-foreground grid size-8 place-items-center rounded-md">
+            <MoreHorizontal className="size-4" aria-hidden />
+          </span>
+        )}
       </div>
 
       {user ? (
         <ChatThread
+          key={conversationId ?? "new"}
           initialConversationId={conversationId}
           initialMessages={messages}
         />

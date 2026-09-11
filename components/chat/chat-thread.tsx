@@ -6,7 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { ChatMessage } from "@/components/chat/chat-message";
 import { ChatInput } from "@/components/chat/chat-input";
 import { TypingIndicator } from "@/components/chat/typing-indicator";
-import { RasterIcon, ILLUSTRATION } from "@/components/icons/raster-icon";
+import {
+  RasterIcon,
+  ILLUSTRATION,
+  CHARACTER,
+} from "@/components/icons/raster-icon";
 import { sendMessage, retryLastReply } from "@/lib/chat/actions";
 import type { ChatMessageRow } from "@/lib/chat/data";
 import type { ChatMessageModel } from "@/components/chat/types";
@@ -120,11 +124,20 @@ export function ChatThread({
           <EmptyState />
         ) : (
           messages.map((m) => (
-            <ChatMessage key={m.id} message={m} characterInitials="LE" />
+            <ChatMessage
+              key={m.id}
+              message={m}
+              characterInitials="LE"
+              characterAvatar={CHARACTER.lena}
+            />
           ))
         )}
         {pending ? (
-          <TypingIndicator characterName="Lena" characterInitials="LE" />
+          <TypingIndicator
+            characterName="Lena"
+            characterInitials="LE"
+            characterAvatar={CHARACTER.lena}
+          />
         ) : null}
         {error ? (
           <div

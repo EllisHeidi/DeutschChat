@@ -3,7 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { getOptionalUser } from "@/lib/auth/user";
 import { createClient } from "@/lib/supabase/server";
-import { generateReply, AiNotConfiguredError } from "@/lib/chat/ai";
+import {
+  generateReply,
+  translateWord,
+  AiNotConfiguredError,
+} from "@/lib/chat/ai";
 import type { ChatTurn } from "@/lib/chat/ai";
 import type { ChatMessageRow } from "@/lib/chat/data";
 import type { CefrLevel } from "@/lib/learning/cefr";
@@ -326,5 +330,55 @@ export async function retryLastReply(
       userMessage: last,
       error: aiErrorMessage(error),
     };
+  }
+}
+
+/**
+ * Clears the signed-in user's active conversation from view. Non-destructive
+ * — marks it `abandoned` rather than deleting rows, so the next message
+ * starts a fresh conversation (mirrors how `sendMessage(null, ...)` already
+ * creates one). A no-op, not an error, when there's nothing active.
+ */
+export async function clearActiveConversation(): Promise<{ ok: boolean }> {
+  const user = await getOptionalUser();
+  if (!user) return { ok: false };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("conversations")
+    .update({ status: "abandoned" })
+    .eq("user_id", user.id)
+    .eq("status", "active");
+
+  revalidatePath("/chat");
+  return { ok: !error };
+}
+
+export type TranslateWordResult =
+  { ok: true; translation: string } | { ok: false; error: string };
+
+/**
+ * Translates a single word/phrase tapped in one of Lena's messages. Requires
+ * sign-in (this spends real API credits, so it shouldn't be a public
+ * endpoint) but is otherwise unrelated to conversation ownership — no
+ * database access at all, just a pass-through to the AI provider.
+ */
+export async function translateChatWord(
+  word: string,
+  sentence: string,
+): Promise<TranslateWordResult> {
+  const user = await getOptionalUser();
+  if (!user) return { ok: false, error: NOT_SIGNED_IN };
+
+  const cleaned = word.trim();
+  if (!cleaned || cleaned.length > 100) {
+    return { ok: false, error: GENERIC_ERROR };
+  }
+
+  try {
+    const translation = await translateWord(cleaned, sentence.slice(0, 500));
+    return { ok: true, translation };
+  } catch (error) {
+    return { ok: false, error: aiErrorMessage(error) };
   }
 }

@@ -3,12 +3,15 @@ import { cn } from "@/lib/utils";
 import { GermanText } from "@/components/ui/typography";
 import { Avatar } from "@/components/ui/avatar";
 import { AudioButton } from "@/components/speaking/audio-button";
+import { TranslatableText } from "@/components/chat/translatable-text";
 import type { ChatMessageModel } from "@/components/chat/types";
 
 type ChatMessageProps = {
   message: ChatMessageModel;
   /** Initials for the assistant character. */
   characterInitials?: string;
+  /** A real portrait for the assistant character, if one exists. */
+  characterAvatar?: string;
   onPlayAudio?: () => void;
   /** e.g. a <CorrectionNote /> rendered under a user message. */
   footer?: React.ReactNode;
@@ -18,6 +21,7 @@ type ChatMessageProps = {
 function ChatMessage({
   message,
   characterInitials = "AI",
+  characterAvatar,
   onPlayAudio,
   footer,
   className,
@@ -32,7 +36,12 @@ function ChatMessage({
       )}
     >
       {!isUser ? (
-        <Avatar initials={characterInitials} size="sm" tone="primary" />
+        <Avatar
+          initials={characterInitials}
+          size="sm"
+          tone="primary"
+          src={characterAvatar}
+        />
       ) : null}
       <div
         className={cn(
@@ -57,7 +66,11 @@ function ChatMessage({
               isUser && "text-ink-surface-foreground",
             )}
           >
-            {message.content}
+            {isUser ? (
+              message.content
+            ) : (
+              <TranslatableText text={message.content} />
+            )}
           </GermanText>
         </div>
         <div className="flex items-center gap-2 px-1">

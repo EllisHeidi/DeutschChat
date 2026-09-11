@@ -110,3 +110,8 @@ export const BRAND = {
   markLight: "/brand/app-icon-light.png",
   kostenlosBadge: "/brand/kostenlos-badge.png",
 } as const;
+
+/** Chat persona portraits. */
+export const CHARACTER = {
+  lena: "/Chatpeople/Lena.png",
+} as const;

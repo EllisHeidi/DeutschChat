@@ -5,15 +5,22 @@ import { Avatar } from "@/components/ui/avatar";
 function TypingIndicator({
   characterInitials = "AI",
   characterName,
+  characterAvatar,
   className,
 }: {
   characterInitials?: string;
   characterName?: string;
+  characterAvatar?: string;
   className?: string;
 }) {
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
-      <Avatar initials={characterInitials} size="sm" tone="primary" />
+      <Avatar
+        initials={characterInitials}
+        size="sm"
+        tone="primary"
+        src={characterAvatar}
+      />
       <div
         className="border-border bg-surface flex items-center gap-1 rounded-2xl rounded-bl-sm border px-3 py-2.5"
         role="status"

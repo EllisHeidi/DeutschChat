@@ -25,6 +25,10 @@ vi.mock("@/lib/chat/data", () => ({
 vi.mock("@/lib/chat/actions", () => ({
   sendMessage: vi.fn(),
   retryLastReply: vi.fn(),
+  clearActiveConversation: vi.fn(),
+}));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
 }));
 
 async function renderChatPage() {

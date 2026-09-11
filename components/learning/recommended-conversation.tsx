@@ -13,6 +13,7 @@ export function RecommendedConversation({
   meta,
   characterName,
   characterInitials,
+  characterAvatar,
   href = "/chat",
   className,
 }: {
@@ -20,6 +21,7 @@ export function RecommendedConversation({
   meta: string;
   characterName: string;
   characterInitials: string;
+  characterAvatar?: string;
   href?: string;
   className?: string;
 }) {
@@ -31,7 +33,11 @@ export function RecommendedConversation({
         className,
       )}
     >
-      <Avatar initials={characterInitials} tone="primary" />
+      <Avatar
+        initials={characterInitials}
+        tone="primary"
+        src={characterAvatar}
+      />
       <div className="min-w-0 flex-1">
         <p className="text-foreground truncate text-sm font-semibold">
           {title}

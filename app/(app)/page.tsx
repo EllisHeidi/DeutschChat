@@ -9,6 +9,7 @@ import { LevelHeroCard } from "@/components/learning/level-hero-card";
 import { TodayPanel } from "@/components/learning/today-panel";
 import { RecommendedConversation } from "@/components/learning/recommended-conversation";
 import { VocabularyMastery } from "@/components/progress/vocabulary-mastery";
+import { CHARACTER } from "@/components/icons/raster-icon";
 import {
   ConnectionErrorNotice,
   SetupNotice,
@@ -113,6 +114,7 @@ export default async function DashboardPage() {
                 meta="A1 · Sich vorstellen"
                 characterName="Lena"
                 characterInitials="LE"
+                characterAvatar={CHARACTER.lena}
               />
             </section>
           </div>

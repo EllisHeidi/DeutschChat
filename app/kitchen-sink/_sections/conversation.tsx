@@ -13,6 +13,7 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { TypingIndicator } from "@/components/chat/typing-indicator";
 import { ConversationHeader } from "@/components/chat/conversation-header";
 import { CorrectionNote } from "@/components/chat/correction-note";
+import { CHARACTER } from "@/components/icons/raster-icon";
 import { Row, Subsection, DemoNote } from "../_kit";
 import { demoConversation } from "../_data";
 
@@ -41,12 +42,14 @@ export function ChatSection() {
           <ChatMessage
             message={demoConversation[0]!}
             characterInitials="LE"
+            characterAvatar={CHARACTER.lena}
             onPlayAudio={() => {}}
           />
           <ChatMessage message={demoConversation[1]!} />
           <ChatMessage
             message={demoConversation[2]!}
             characterInitials="LE"
+            characterAvatar={CHARACTER.lena}
             onPlayAudio={() => {}}
           />
           <ChatMessage
@@ -60,7 +63,11 @@ export function ChatSection() {
               />
             }
           />
-          <TypingIndicator characterName="Lena" characterInitials="LE" />
+          <TypingIndicator
+            characterName="Lena"
+            characterInitials="LE"
+            characterAvatar={CHARACTER.lena}
+          />
         </div>
       </Subsection>
 
