@@ -36,8 +36,8 @@ export default async function ChatPage() {
     <div className="flex h-full min-h-0 flex-col">
       <div className="border-border bg-surface flex shrink-0 items-center gap-3 border-b px-3 py-2.5">
         <Link
-          href="/"
-          aria-label="Zurück"
+          href="/chat/personen"
+          aria-label="Zurück zu Gesprächspartnern"
           className="hover:bg-muted text-muted-foreground grid size-8 place-items-center rounded-md"
         >
           <ChevronLeft className="size-4" aria-hidden />

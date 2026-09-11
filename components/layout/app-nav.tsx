@@ -7,12 +7,19 @@ import { cn } from "@/lib/utils";
 import { TaglineLockup } from "@/components/layout/tagline-lockup";
 import { RasterIcon, NAV_ICON, BRAND } from "@/components/icons/raster-icon";
 
-type NavEntry = { href: string; label: string };
+type NavEntry = {
+  href: string;
+  label: string;
+  /** Section this tab belongs to, for active-state + icon lookup, when it
+   * differs from `href` (e.g. Chat's tab opens the people list, but the tab
+   * should still read as active while inside an actual conversation). */
+  match?: string;
+};
 
 export const NAV_ITEMS: NavEntry[] = [
   { href: "/", label: "Start" },
   { href: "/learn", label: "Lernen" },
-  { href: "/chat", label: "Chat" },
+  { href: "/chat/personen", label: "Chat", match: "/chat" },
   { href: "/progress", label: "Fortschritt" },
   { href: "/profil", label: "Profil" },
 ];
@@ -50,8 +57,9 @@ export function AppBottomNav() {
       aria-label="Hauptnavigation"
       className="border-border bg-surface flex shrink-0 items-stretch border-t pb-[env(safe-area-inset-bottom)] lg:hidden"
     >
-      {NAV_ITEMS.map(({ href, label }) => {
-        const active = isActive(href);
+      {NAV_ITEMS.map(({ href, label, match }) => {
+        const key = match ?? href;
+        const active = isActive(key);
         return (
           <Link
             key={href}
@@ -65,7 +73,7 @@ export function AppBottomNav() {
                 active ? "bg-primary" : "bg-transparent",
               )}
             />
-            <NavIcon href={href} active={active} className="size-8" />
+            <NavIcon href={key} active={active} className="size-8" />
             <span
               className={cn(
                 "text-[0.6875rem] font-medium transition-colors",
@@ -103,8 +111,9 @@ export function AppSidebar() {
         aria-label="Hauptnavigation"
         className="flex flex-1 flex-col gap-1 px-4"
       >
-        {NAV_ITEMS.map(({ href, label }) => {
-          const active = isActive(href);
+        {NAV_ITEMS.map(({ href, label, match }) => {
+          const key = match ?? href;
+          const active = isActive(key);
           return (
             <Link
               key={href}
@@ -117,7 +126,7 @@ export function AppSidebar() {
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              <NavIcon href={href} active={active} className="size-[1.6rem]" />
+              <NavIcon href={key} active={active} className="size-[1.6rem]" />
               {label}
             </Link>
           );

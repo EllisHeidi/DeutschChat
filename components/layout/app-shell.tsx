@@ -13,7 +13,7 @@ import { ScrollReset } from "@/components/layout/scroll-reset";
 const SCROLL_ID = "app-scroll";
 
 /** Routes that manage their own full-height layout and internal scrolling. */
-const FULL_BLEED_ROUTES = ["/chat"];
+const FULL_BLEED_ROUTES = ["/chat", "/chat/personen"];
 
 /**
  * The authenticated app frame: a sidebar on desktop, a slim wordmark bar +

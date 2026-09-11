@@ -103,7 +103,7 @@ export default async function DashboardPage() {
                   Empfohlene Konversation
                 </SectionHeading>
                 <Link
-                  href="/chat"
+                  href="/chat/personen"
                   className="text-xs font-medium text-white/70 hover:text-white"
                 >
                   Alle
