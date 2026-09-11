@@ -4,7 +4,7 @@
 project_id = "deutschchat"
 
 [db]
-major_version = 16
+major_version = 17
 
 [db.migrations]
 schema_paths = []

@@ -1,843 +1,995 @@
-/**
- * Supabase database types for the `public` schema.
- *
- * HAND-AUTHORED to match supabase/migrations/*. Regenerate the canonical
- * version once a project is linked:
- *
- *   npm run db:types
- *
- * (runs `supabase gen types typescript --linked --schema public`). Keep the
- * shape identical to the generator's output so regeneration is a clean diff.
- * This file is excluded from ESLint and Prettier.
- */
-
 export type Json =
   | string
   | number
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
       chat_scenarios: {
         Row: {
-          id: string;
-          slug: string;
-          title: string;
-          description: string | null;
-          cefr_level: Database["public"]["Enums"]["cefr_level"];
-          persona_name: string;
-          persona_description: string | null;
-          setting: string | null;
-          goals: Json;
-          sort_order: number | null;
-          is_published: boolean;
-          created_at: string;
-          updated_at: string;
-        };
+          cefr_level: Database["public"]["Enums"]["cefr_level"]
+          created_at: string
+          description: string | null
+          goals: Json
+          id: string
+          is_published: boolean
+          persona_description: string | null
+          persona_name: string
+          setting: string | null
+          slug: string
+          sort_order: number | null
+          title: string
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          slug: string;
-          title: string;
-          description?: string | null;
-          cefr_level: Database["public"]["Enums"]["cefr_level"];
-          persona_name: string;
-          persona_description?: string | null;
-          setting?: string | null;
-          goals?: Json;
-          sort_order?: number | null;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
+          cefr_level: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          description?: string | null
+          goals?: Json
+          id?: string
+          is_published?: boolean
+          persona_description?: string | null
+          persona_name: string
+          setting?: string | null
+          slug: string
+          sort_order?: number | null
+          title: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          slug?: string;
-          title?: string;
-          description?: string | null;
-          cefr_level?: Database["public"]["Enums"]["cefr_level"];
-          persona_name?: string;
-          persona_description?: string | null;
-          setting?: string | null;
-          goals?: Json;
-          sort_order?: number | null;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          cefr_level?: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          description?: string | null
+          goals?: Json
+          id?: string
+          is_published?: boolean
+          persona_description?: string | null
+          persona_name?: string
+          setting?: string | null
+          slug?: string
+          sort_order?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_messages: {
         Row: {
-          id: string;
-          conversation_id: string;
-          user_id: string;
-          sender: Database["public"]["Enums"]["message_sender"];
-          content: string;
-          sequence: number;
-          audio_path: string | null;
-          metadata: Json;
-          created_at: string;
-        };
+          audio_path: string | null
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json
+          sender: Database["public"]["Enums"]["message_sender"]
+          sequence: number
+          user_id: string
+        }
         Insert: {
-          id?: string;
-          conversation_id: string;
-          user_id: string;
-          sender: Database["public"]["Enums"]["message_sender"];
-          content: string;
-          sequence: number;
-          audio_path?: string | null;
-          metadata?: Json;
-          created_at?: string;
-        };
+          audio_path?: string | null
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          sender: Database["public"]["Enums"]["message_sender"]
+          sequence: number
+          user_id: string
+        }
         Update: {
-          id?: string;
-          conversation_id?: string;
-          user_id?: string;
-          sender?: Database["public"]["Enums"]["message_sender"];
-          content?: string;
-          sequence?: number;
-          audio_path?: string | null;
-          metadata?: Json;
-          created_at?: string;
-        };
-        Relationships: [];
-      };
+          audio_path?: string | null
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          sender?: Database["public"]["Enums"]["message_sender"]
+          sequence?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
-          id: string;
-          user_id: string;
-          scenario_id: string | null;
-          mode: Database["public"]["Enums"]["conversation_mode"];
-          status: Database["public"]["Enums"]["conversation_status"];
-          title: string | null;
-          message_count: number;
-          started_at: string;
-          last_message_at: string | null;
-          ended_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string
+          ended_at: string | null
+          id: string
+          last_message_at: string | null
+          message_count: number
+          mode: Database["public"]["Enums"]["conversation_mode"]
+          scenario_id: string | null
+          started_at: string
+          status: Database["public"]["Enums"]["conversation_status"]
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          scenario_id?: string | null;
-          mode?: Database["public"]["Enums"]["conversation_mode"];
-          status?: Database["public"]["Enums"]["conversation_status"];
-          title?: string | null;
-          message_count?: number;
-          started_at?: string;
-          last_message_at?: string | null;
-          ended_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          message_count?: number
+          mode?: Database["public"]["Enums"]["conversation_mode"]
+          scenario_id?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          scenario_id?: string | null;
-          mode?: Database["public"]["Enums"]["conversation_mode"];
-          status?: Database["public"]["Enums"]["conversation_status"];
-          title?: string | null;
-          message_count?: number;
-          started_at?: string;
-          last_message_at?: string | null;
-          ended_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          message_count?: number
+          mode?: Database["public"]["Enums"]["conversation_mode"]
+          scenario_id?: string | null
+          started_at?: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "chat_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grammar_examples: {
         Row: {
-          id: string;
-          grammar_point_id: string;
-          german: string;
-          translation: string | null;
-          sort_order: number;
-          created_at: string;
-        };
+          created_at: string
+          german: string
+          grammar_point_id: string
+          id: string
+          sort_order: number
+          translation: string | null
+        }
         Insert: {
-          id?: string;
-          grammar_point_id: string;
-          german: string;
-          translation?: string | null;
-          sort_order?: number;
-          created_at?: string;
-        };
+          created_at?: string
+          german: string
+          grammar_point_id: string
+          id?: string
+          sort_order?: number
+          translation?: string | null
+        }
         Update: {
-          id?: string;
-          grammar_point_id?: string;
-          german?: string;
-          translation?: string | null;
-          sort_order?: number;
-          created_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          german?: string
+          grammar_point_id?: string
+          id?: string
+          sort_order?: number
+          translation?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grammar_examples_grammar_point_id_fkey"
+            columns: ["grammar_point_id"]
+            isOneToOne: false
+            referencedRelation: "grammar_points"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grammar_points: {
         Row: {
-          id: string;
-          slug: string;
-          title: string;
-          summary: string | null;
-          explanation: string | null;
-          cefr_level: Database["public"]["Enums"]["cefr_level"];
-          category: string | null;
-          metadata: Json;
-          created_at: string;
-          updated_at: string;
-        };
+          category: string | null
+          cefr_level: Database["public"]["Enums"]["cefr_level"]
+          created_at: string
+          explanation: string | null
+          id: string
+          metadata: Json
+          slug: string
+          summary: string | null
+          title: string
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          slug: string;
-          title: string;
-          summary?: string | null;
-          explanation?: string | null;
-          cefr_level: Database["public"]["Enums"]["cefr_level"];
-          category?: string | null;
-          metadata?: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
+          category?: string | null
+          cefr_level: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          metadata?: Json
+          slug: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          slug?: string;
-          title?: string;
-          summary?: string | null;
-          explanation?: string | null;
-          cefr_level?: Database["public"]["Enums"]["cefr_level"];
-          category?: string | null;
-          metadata?: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          category?: string | null
+          cefr_level?: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          metadata?: Json
+          slug?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       learner_profiles: {
         Row: {
-          id: string;
-          current_level: Database["public"]["Enums"]["cefr_level"];
-          target_level: Database["public"]["Enums"]["cefr_level"] | null;
-          native_language: string;
-          ui_locale: string;
-          timezone: string | null;
-          learning_preferences: Json;
-          onboarded_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string
+          current_level: Database["public"]["Enums"]["cefr_level"]
+          id: string
+          learning_preferences: Json
+          native_language: string
+          onboarded_at: string | null
+          target_level: Database["public"]["Enums"]["cefr_level"] | null
+          timezone: string | null
+          ui_locale: string
+          updated_at: string
+        }
         Insert: {
-          id: string;
-          current_level?: Database["public"]["Enums"]["cefr_level"];
-          target_level?: Database["public"]["Enums"]["cefr_level"] | null;
-          native_language?: string;
-          ui_locale?: string;
-          timezone?: string | null;
-          learning_preferences?: Json;
-          onboarded_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string
+          current_level?: Database["public"]["Enums"]["cefr_level"]
+          id: string
+          learning_preferences?: Json
+          native_language?: string
+          onboarded_at?: string | null
+          target_level?: Database["public"]["Enums"]["cefr_level"] | null
+          timezone?: string | null
+          ui_locale?: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          current_level?: Database["public"]["Enums"]["cefr_level"];
-          target_level?: Database["public"]["Enums"]["cefr_level"] | null;
-          native_language?: string;
-          ui_locale?: string;
-          timezone?: string | null;
-          learning_preferences?: Json;
-          onboarded_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          current_level?: Database["public"]["Enums"]["cefr_level"]
+          id?: string
+          learning_preferences?: Json
+          native_language?: string
+          onboarded_at?: string | null
+          target_level?: Database["public"]["Enums"]["cefr_level"] | null
+          timezone?: string | null
+          ui_locale?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       learning_observations: {
         Row: {
-          id: string;
-          user_id: string;
-          source: Database["public"]["Enums"]["observation_source"];
-          result: Database["public"]["Enums"]["observation_result"];
-          skill_key: Database["public"]["Enums"]["skill_key"] | null;
-          lesson_item_id: string | null;
-          message_id: string | null;
-          vocabulary_id: string | null;
-          grammar_point_id: string | null;
-          detail: Json;
-          observed_at: string;
-          created_at: string;
-        };
+          created_at: string
+          detail: Json
+          grammar_point_id: string | null
+          id: string
+          lesson_item_id: string | null
+          message_id: string | null
+          observed_at: string
+          result: Database["public"]["Enums"]["observation_result"]
+          skill_key: Database["public"]["Enums"]["skill_key"] | null
+          source: Database["public"]["Enums"]["observation_source"]
+          user_id: string
+          vocabulary_id: string | null
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          source: Database["public"]["Enums"]["observation_source"];
-          result: Database["public"]["Enums"]["observation_result"];
-          skill_key?: Database["public"]["Enums"]["skill_key"] | null;
-          lesson_item_id?: string | null;
-          message_id?: string | null;
-          vocabulary_id?: string | null;
-          grammar_point_id?: string | null;
-          detail?: Json;
-          observed_at?: string;
-          created_at?: string;
-        };
+          created_at?: string
+          detail?: Json
+          grammar_point_id?: string | null
+          id?: string
+          lesson_item_id?: string | null
+          message_id?: string | null
+          observed_at?: string
+          result: Database["public"]["Enums"]["observation_result"]
+          skill_key?: Database["public"]["Enums"]["skill_key"] | null
+          source: Database["public"]["Enums"]["observation_source"]
+          user_id: string
+          vocabulary_id?: string | null
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          source?: Database["public"]["Enums"]["observation_source"];
-          result?: Database["public"]["Enums"]["observation_result"];
-          skill_key?: Database["public"]["Enums"]["skill_key"] | null;
-          lesson_item_id?: string | null;
-          message_id?: string | null;
-          vocabulary_id?: string | null;
-          grammar_point_id?: string | null;
-          detail?: Json;
-          observed_at?: string;
-          created_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          detail?: Json
+          grammar_point_id?: string | null
+          id?: string
+          lesson_item_id?: string | null
+          message_id?: string | null
+          observed_at?: string
+          result?: Database["public"]["Enums"]["observation_result"]
+          skill_key?: Database["public"]["Enums"]["skill_key"] | null
+          source?: Database["public"]["Enums"]["observation_source"]
+          user_id?: string
+          vocabulary_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_observations_grammar_point_id_fkey"
+            columns: ["grammar_point_id"]
+            isOneToOne: false
+            referencedRelation: "grammar_points"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_observations_lesson_item_id_fkey"
+            columns: ["lesson_item_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_observations_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "conversation_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_observations_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_item_grammar: {
         Row: {
-          lesson_item_id: string;
-          grammar_point_id: string;
-        };
+          grammar_point_id: string
+          lesson_item_id: string
+        }
         Insert: {
-          lesson_item_id: string;
-          grammar_point_id: string;
-        };
+          grammar_point_id: string
+          lesson_item_id: string
+        }
         Update: {
-          lesson_item_id?: string;
-          grammar_point_id?: string;
-        };
-        Relationships: [];
-      };
+          grammar_point_id?: string
+          lesson_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_item_grammar_grammar_point_id_fkey"
+            columns: ["grammar_point_id"]
+            isOneToOne: false
+            referencedRelation: "grammar_points"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_item_grammar_lesson_item_id_fkey"
+            columns: ["lesson_item_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_item_vocabulary: {
         Row: {
-          lesson_item_id: string;
-          vocabulary_id: string;
-          role: string;
-        };
+          lesson_item_id: string
+          role: string
+          vocabulary_id: string
+        }
         Insert: {
-          lesson_item_id: string;
-          vocabulary_id: string;
-          role?: string;
-        };
+          lesson_item_id: string
+          role?: string
+          vocabulary_id: string
+        }
         Update: {
-          lesson_item_id?: string;
-          vocabulary_id?: string;
-          role?: string;
-        };
-        Relationships: [];
-      };
+          lesson_item_id?: string
+          role?: string
+          vocabulary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_item_vocabulary_lesson_item_id_fkey"
+            columns: ["lesson_item_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_item_vocabulary_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_items: {
         Row: {
-          id: string;
-          lesson_id: string;
-          sort_order: number;
-          item_type: Database["public"]["Enums"]["lesson_item_type"];
-          prompt: string | null;
-          content: Json;
-          created_at: string;
-          updated_at: string;
-        };
+          content: Json
+          created_at: string
+          id: string
+          item_type: Database["public"]["Enums"]["lesson_item_type"]
+          lesson_id: string
+          prompt: string | null
+          sort_order: number
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          lesson_id: string;
-          sort_order: number;
-          item_type: Database["public"]["Enums"]["lesson_item_type"];
-          prompt?: string | null;
-          content?: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
+          content?: Json
+          created_at?: string
+          id?: string
+          item_type: Database["public"]["Enums"]["lesson_item_type"]
+          lesson_id: string
+          prompt?: string | null
+          sort_order: number
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          lesson_id?: string;
-          sort_order?: number;
-          item_type?: Database["public"]["Enums"]["lesson_item_type"];
-          prompt?: string | null;
-          content?: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          content?: Json
+          created_at?: string
+          id?: string
+          item_type?: Database["public"]["Enums"]["lesson_item_type"]
+          lesson_id?: string
+          prompt?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_items_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
-          id: string;
-          unit_id: string;
-          slug: string;
-          title: string;
-          description: string | null;
-          lesson_type: Database["public"]["Enums"]["lesson_type"];
-          sort_order: number;
-          estimated_minutes: number | null;
-          is_published: boolean;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string
+          description: string | null
+          estimated_minutes: number | null
+          id: string
+          is_published: boolean
+          lesson_type: Database["public"]["Enums"]["lesson_type"]
+          slug: string
+          sort_order: number
+          title: string
+          unit_id: string
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          unit_id: string;
-          slug: string;
-          title: string;
-          description?: string | null;
-          lesson_type?: Database["public"]["Enums"]["lesson_type"];
-          sort_order: number;
-          estimated_minutes?: number | null;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          lesson_type?: Database["public"]["Enums"]["lesson_type"]
+          slug: string
+          sort_order: number
+          title: string
+          unit_id: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          unit_id?: string;
-          slug?: string;
-          title?: string;
-          description?: string | null;
-          lesson_type?: Database["public"]["Enums"]["lesson_type"];
-          sort_order?: number;
-          estimated_minutes?: number | null;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          description?: string | null
+          estimated_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          lesson_type?: Database["public"]["Enums"]["lesson_type"]
+          slug?: string
+          sort_order?: number
+          title?: string
+          unit_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       levels: {
         Row: {
-          code: Database["public"]["Enums"]["cefr_level"];
-          name: string;
-          description: string | null;
-          is_free: boolean;
-          sort_order: number;
-          created_at: string;
-          updated_at: string;
-        };
+          code: Database["public"]["Enums"]["cefr_level"]
+          created_at: string
+          description: string | null
+          is_free: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
         Insert: {
-          code: Database["public"]["Enums"]["cefr_level"];
-          name: string;
-          description?: string | null;
-          is_free?: boolean;
-          sort_order: number;
-          created_at?: string;
-          updated_at?: string;
-        };
+          code: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          description?: string | null
+          is_free?: boolean
+          name: string
+          sort_order: number
+          updated_at?: string
+        }
         Update: {
-          code?: Database["public"]["Enums"]["cefr_level"];
-          name?: string;
-          description?: string | null;
-          is_free?: boolean;
-          sort_order?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          code?: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          description?: string | null
+          is_free?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       message_corrections: {
         Row: {
-          id: string;
-          message_id: string;
-          user_id: string;
-          correction_kind: Database["public"]["Enums"]["correction_kind"];
-          original_text: string;
-          corrected_text: string;
-          explanation: string | null;
-          grammar_point_id: string | null;
-          vocabulary_id: string | null;
-          learning_observation_id: string | null;
-          created_at: string;
-        };
+          corrected_text: string
+          correction_kind: Database["public"]["Enums"]["correction_kind"]
+          created_at: string
+          explanation: string | null
+          grammar_point_id: string | null
+          id: string
+          learning_observation_id: string | null
+          message_id: string
+          original_text: string
+          user_id: string
+          vocabulary_id: string | null
+        }
         Insert: {
-          id?: string;
-          message_id: string;
-          user_id: string;
-          correction_kind?: Database["public"]["Enums"]["correction_kind"];
-          original_text: string;
-          corrected_text: string;
-          explanation?: string | null;
-          grammar_point_id?: string | null;
-          vocabulary_id?: string | null;
-          learning_observation_id?: string | null;
-          created_at?: string;
-        };
+          corrected_text: string
+          correction_kind?: Database["public"]["Enums"]["correction_kind"]
+          created_at?: string
+          explanation?: string | null
+          grammar_point_id?: string | null
+          id?: string
+          learning_observation_id?: string | null
+          message_id: string
+          original_text: string
+          user_id: string
+          vocabulary_id?: string | null
+        }
         Update: {
-          id?: string;
-          message_id?: string;
-          user_id?: string;
-          correction_kind?: Database["public"]["Enums"]["correction_kind"];
-          original_text?: string;
-          corrected_text?: string;
-          explanation?: string | null;
-          grammar_point_id?: string | null;
-          vocabulary_id?: string | null;
-          learning_observation_id?: string | null;
-          created_at?: string;
-        };
-        Relationships: [];
-      };
+          corrected_text?: string
+          correction_kind?: Database["public"]["Enums"]["correction_kind"]
+          created_at?: string
+          explanation?: string | null
+          grammar_point_id?: string | null
+          id?: string
+          learning_observation_id?: string | null
+          message_id?: string
+          original_text?: string
+          user_id?: string
+          vocabulary_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_corrections_grammar_point_id_fkey"
+            columns: ["grammar_point_id"]
+            isOneToOne: false
+            referencedRelation: "grammar_points"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_corrections_learning_observation_id_fkey"
+            columns: ["learning_observation_id"]
+            isOneToOne: false
+            referencedRelation: "learning_observations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_corrections_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "conversation_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_corrections_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
-          id: string;
-          display_name: string | null;
-          avatar_url: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
         Insert: {
-          id: string;
-          display_name?: string | null;
-          avatar_url?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          display_name?: string | null;
-          avatar_url?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       skills: {
         Row: {
-          key: Database["public"]["Enums"]["skill_key"];
-          name: string;
-          sort_order: number;
-        };
+          key: Database["public"]["Enums"]["skill_key"]
+          name: string
+          sort_order: number
+        }
         Insert: {
-          key: Database["public"]["Enums"]["skill_key"];
-          name: string;
-          sort_order: number;
-        };
+          key: Database["public"]["Enums"]["skill_key"]
+          name: string
+          sort_order: number
+        }
         Update: {
-          key?: Database["public"]["Enums"]["skill_key"];
-          name?: string;
-          sort_order?: number;
-        };
-        Relationships: [];
-      };
+          key?: Database["public"]["Enums"]["skill_key"]
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       units: {
         Row: {
-          id: string;
-          level_code: Database["public"]["Enums"]["cefr_level"];
-          slug: string;
-          title: string;
-          description: string | null;
-          sort_order: number;
-          is_published: boolean;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string
+          description: string | null
+          id: string
+          is_published: boolean
+          level_code: Database["public"]["Enums"]["cefr_level"]
+          slug: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          level_code: Database["public"]["Enums"]["cefr_level"];
-          slug: string;
-          title: string;
-          description?: string | null;
-          sort_order: number;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          level_code: Database["public"]["Enums"]["cefr_level"]
+          slug: string
+          sort_order: number
+          title: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          level_code?: Database["public"]["Enums"]["cefr_level"];
-          slug?: string;
-          title?: string;
-          description?: string | null;
-          sort_order?: number;
-          is_published?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          level_code?: Database["public"]["Enums"]["cefr_level"]
+          slug?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "units_level_code_fkey"
+            columns: ["level_code"]
+            isOneToOne: false
+            referencedRelation: "levels"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       user_daily_activity: {
         Row: {
-          id: string;
-          user_id: string;
-          activity_date: string;
-          lessons_completed: number;
-          items_practiced: number;
-          minutes_spent: number;
-          vocab_reviewed: number;
-          messages_sent: number;
-          created_at: string;
-          updated_at: string;
-        };
+          activity_date: string
+          created_at: string
+          id: string
+          items_practiced: number
+          lessons_completed: number
+          messages_sent: number
+          minutes_spent: number
+          updated_at: string
+          user_id: string
+          vocab_reviewed: number
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          activity_date: string;
-          lessons_completed?: number;
-          items_practiced?: number;
-          minutes_spent?: number;
-          vocab_reviewed?: number;
-          messages_sent?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
+          activity_date: string
+          created_at?: string
+          id?: string
+          items_practiced?: number
+          lessons_completed?: number
+          messages_sent?: number
+          minutes_spent?: number
+          updated_at?: string
+          user_id: string
+          vocab_reviewed?: number
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          activity_date?: string;
-          lessons_completed?: number;
-          items_practiced?: number;
-          minutes_spent?: number;
-          vocab_reviewed?: number;
-          messages_sent?: number;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          activity_date?: string
+          created_at?: string
+          id?: string
+          items_practiced?: number
+          lessons_completed?: number
+          messages_sent?: number
+          minutes_spent?: number
+          updated_at?: string
+          user_id?: string
+          vocab_reviewed?: number
+        }
+        Relationships: []
+      }
       user_grammar_progress: {
         Row: {
-          id: string;
-          user_id: string;
-          grammar_point_id: string;
-          status: Database["public"]["Enums"]["grammar_status"];
-          strength: number;
-          success_count: number;
-          error_count: number;
-          last_practiced_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string
+          error_count: number
+          grammar_point_id: string
+          id: string
+          last_practiced_at: string | null
+          status: Database["public"]["Enums"]["grammar_status"]
+          strength: number
+          success_count: number
+          updated_at: string
+          user_id: string
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          grammar_point_id: string;
-          status?: Database["public"]["Enums"]["grammar_status"];
-          strength?: number;
-          success_count?: number;
-          error_count?: number;
-          last_practiced_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string
+          error_count?: number
+          grammar_point_id: string
+          id?: string
+          last_practiced_at?: string | null
+          status?: Database["public"]["Enums"]["grammar_status"]
+          strength?: number
+          success_count?: number
+          updated_at?: string
+          user_id: string
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          grammar_point_id?: string;
-          status?: Database["public"]["Enums"]["grammar_status"];
-          strength?: number;
-          success_count?: number;
-          error_count?: number;
-          last_practiced_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          error_count?: number
+          grammar_point_id?: string
+          id?: string
+          last_practiced_at?: string | null
+          status?: Database["public"]["Enums"]["grammar_status"]
+          strength?: number
+          success_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_grammar_progress_grammar_point_id_fkey"
+            columns: ["grammar_point_id"]
+            isOneToOne: false
+            referencedRelation: "grammar_points"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_lesson_progress: {
         Row: {
-          id: string;
-          user_id: string;
-          lesson_id: string;
-          status: Database["public"]["Enums"]["progress_status"];
-          completed_item_count: number;
-          total_item_count: number;
-          score: number | null;
-          started_at: string | null;
-          completed_at: string | null;
-          last_activity_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          completed_at: string | null
+          completed_item_count: number
+          created_at: string
+          id: string
+          last_activity_at: string | null
+          lesson_id: string
+          score: number | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["progress_status"]
+          total_item_count: number
+          updated_at: string
+          user_id: string
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          lesson_id: string;
-          status?: Database["public"]["Enums"]["progress_status"];
-          completed_item_count?: number;
-          total_item_count?: number;
-          score?: number | null;
-          started_at?: string | null;
-          completed_at?: string | null;
-          last_activity_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          completed_at?: string | null
+          completed_item_count?: number
+          created_at?: string
+          id?: string
+          last_activity_at?: string | null
+          lesson_id: string
+          score?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["progress_status"]
+          total_item_count?: number
+          updated_at?: string
+          user_id: string
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          lesson_id?: string;
-          status?: Database["public"]["Enums"]["progress_status"];
-          completed_item_count?: number;
-          total_item_count?: number;
-          score?: number | null;
-          started_at?: string | null;
-          completed_at?: string | null;
-          last_activity_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          completed_at?: string | null
+          completed_item_count?: number
+          created_at?: string
+          id?: string
+          last_activity_at?: string | null
+          lesson_id?: string
+          score?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["progress_status"]
+          total_item_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_skill_progress: {
         Row: {
-          id: string;
-          user_id: string;
-          skill_key: Database["public"]["Enums"]["skill_key"];
-          level_code: Database["public"]["Enums"]["cefr_level"];
-          score: number;
-          activity_count: number;
-          last_activity_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          activity_count: number
+          created_at: string
+          id: string
+          last_activity_at: string | null
+          level_code: Database["public"]["Enums"]["cefr_level"]
+          score: number
+          skill_key: Database["public"]["Enums"]["skill_key"]
+          updated_at: string
+          user_id: string
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          skill_key: Database["public"]["Enums"]["skill_key"];
-          level_code: Database["public"]["Enums"]["cefr_level"];
-          score?: number;
-          activity_count?: number;
-          last_activity_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          activity_count?: number
+          created_at?: string
+          id?: string
+          last_activity_at?: string | null
+          level_code: Database["public"]["Enums"]["cefr_level"]
+          score?: number
+          skill_key: Database["public"]["Enums"]["skill_key"]
+          updated_at?: string
+          user_id: string
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          skill_key?: Database["public"]["Enums"]["skill_key"];
-          level_code?: Database["public"]["Enums"]["cefr_level"];
-          score?: number;
-          activity_count?: number;
-          last_activity_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          activity_count?: number
+          created_at?: string
+          id?: string
+          last_activity_at?: string | null
+          level_code?: Database["public"]["Enums"]["cefr_level"]
+          score?: number
+          skill_key?: Database["public"]["Enums"]["skill_key"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_vocabulary_progress: {
         Row: {
-          id: string;
-          user_id: string;
-          vocabulary_id: string;
-          status: Database["public"]["Enums"]["vocab_status"];
-          strength: number;
-          times_seen: number;
-          times_correct: number;
-          first_learned_at: string | null;
-          last_reviewed_at: string | null;
-          due_at: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          created_at: string
+          due_at: string | null
+          first_learned_at: string | null
+          id: string
+          last_reviewed_at: string | null
+          status: Database["public"]["Enums"]["vocab_status"]
+          strength: number
+          times_correct: number
+          times_seen: number
+          updated_at: string
+          user_id: string
+          vocabulary_id: string
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          vocabulary_id: string;
-          status?: Database["public"]["Enums"]["vocab_status"];
-          strength?: number;
-          times_seen?: number;
-          times_correct?: number;
-          first_learned_at?: string | null;
-          last_reviewed_at?: string | null;
-          due_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          created_at?: string
+          due_at?: string | null
+          first_learned_at?: string | null
+          id?: string
+          last_reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["vocab_status"]
+          strength?: number
+          times_correct?: number
+          times_seen?: number
+          updated_at?: string
+          user_id: string
+          vocabulary_id: string
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          vocabulary_id?: string;
-          status?: Database["public"]["Enums"]["vocab_status"];
-          strength?: number;
-          times_seen?: number;
-          times_correct?: number;
-          first_learned_at?: string | null;
-          last_reviewed_at?: string | null;
-          due_at?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
+          created_at?: string
+          due_at?: string | null
+          first_learned_at?: string | null
+          id?: string
+          last_reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["vocab_status"]
+          strength?: number
+          times_correct?: number
+          times_seen?: number
+          updated_at?: string
+          user_id?: string
+          vocabulary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_vocabulary_progress_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vocabulary: {
         Row: {
-          id: string;
-          lemma: string;
-          display_form: string;
-          translation: string;
-          part_of_speech: Database["public"]["Enums"]["part_of_speech"];
-          article: string | null;
-          plural_form: string | null;
-          ipa: string | null;
-          example_sentence: string | null;
-          example_translation: string | null;
-          cefr_level: Database["public"]["Enums"]["cefr_level"];
-          audio_path: string | null;
-          notes: string | null;
-          metadata: Json;
-          created_at: string;
-          updated_at: string;
-        };
+          article: string | null
+          audio_path: string | null
+          cefr_level: Database["public"]["Enums"]["cefr_level"]
+          created_at: string
+          display_form: string
+          example_sentence: string | null
+          example_translation: string | null
+          id: string
+          ipa: string | null
+          lemma: string
+          metadata: Json
+          notes: string | null
+          part_of_speech: Database["public"]["Enums"]["part_of_speech"]
+          plural_form: string | null
+          translation: string
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          lemma: string;
-          display_form: string;
-          translation: string;
-          part_of_speech: Database["public"]["Enums"]["part_of_speech"];
-          article?: string | null;
-          plural_form?: string | null;
-          ipa?: string | null;
-          example_sentence?: string | null;
-          example_translation?: string | null;
-          cefr_level: Database["public"]["Enums"]["cefr_level"];
-          audio_path?: string | null;
-          notes?: string | null;
-          metadata?: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
+          article?: string | null
+          audio_path?: string | null
+          cefr_level: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          display_form: string
+          example_sentence?: string | null
+          example_translation?: string | null
+          id?: string
+          ipa?: string | null
+          lemma: string
+          metadata?: Json
+          notes?: string | null
+          part_of_speech: Database["public"]["Enums"]["part_of_speech"]
+          plural_form?: string | null
+          translation: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          lemma?: string;
-          display_form?: string;
-          translation?: string;
-          part_of_speech?: Database["public"]["Enums"]["part_of_speech"];
-          article?: string | null;
-          plural_form?: string | null;
-          ipa?: string | null;
-          example_sentence?: string | null;
-          example_translation?: string | null;
-          cefr_level?: Database["public"]["Enums"]["cefr_level"];
-          audio_path?: string | null;
-          notes?: string | null;
-          metadata?: Json;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-    };
+          article?: string | null
+          audio_path?: string | null
+          cefr_level?: Database["public"]["Enums"]["cefr_level"]
+          created_at?: string
+          display_form?: string
+          example_sentence?: string | null
+          example_translation?: string | null
+          id?: string
+          ipa?: string | null
+          lemma?: string
+          metadata?: Json
+          notes?: string | null
+          part_of_speech?: Database["public"]["Enums"]["part_of_speech"]
+          plural_form?: string | null
+          translation?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      cefr_level: "A1" | "A2" | "B1" | "B2" | "C1";
-      conversation_mode: "guided" | "normal" | "challenge";
-      conversation_status: "active" | "completed" | "abandoned";
+      cefr_level: "A1" | "A2" | "B1" | "B2" | "C1"
+      conversation_mode: "guided" | "normal" | "challenge"
+      conversation_status: "active" | "completed" | "abandoned"
       correction_kind:
         | "minor"
         | "grammar"
         | "vocabulary"
         | "pronunciation"
-        | "spelling";
-      grammar_status: "new" | "learning" | "weak" | "mastered";
+        | "spelling"
+      grammar_status: "new" | "learning" | "weak" | "mastered"
       lesson_item_type:
         | "presentation"
         | "flashcard"
@@ -847,7 +999,7 @@ export type Database = {
         | "speaking"
         | "writing_prompt"
         | "matching"
-        | "info";
+        | "info"
       lesson_type:
         | "vocabulary"
         | "grammar"
@@ -856,10 +1008,10 @@ export type Database = {
         | "writing"
         | "speaking"
         | "conversation"
-        | "review";
-      message_sender: "user" | "assistant" | "system";
-      observation_result: "correct" | "incorrect" | "partial" | "exposure";
-      observation_source: "lesson" | "conversation" | "review" | "exam";
+        | "review"
+      message_sender: "user" | "assistant" | "system"
+      observation_result: "correct" | "incorrect" | "partial" | "exposure"
+      observation_source: "lesson" | "conversation" | "review" | "exam"
       part_of_speech:
         | "noun"
         | "verb"
@@ -872,19 +1024,202 @@ export type Database = {
         | "numeral"
         | "interjection"
         | "phrase"
-        | "other";
-      progress_status: "not_started" | "in_progress" | "completed";
+        | "other"
+      progress_status: "not_started" | "in_progress" | "completed"
       skill_key:
         | "reading"
         | "listening"
         | "writing"
         | "speaking"
         | "vocabulary"
-        | "grammar";
-      vocab_status: "new" | "learning" | "known" | "needs_review";
-    };
+        | "grammar"
+      vocab_status: "new" | "learning" | "known" | "needs_review"
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      cefr_level: ["A1", "A2", "B1", "B2", "C1"],
+      conversation_mode: ["guided", "normal", "challenge"],
+      conversation_status: ["active", "completed", "abandoned"],
+      correction_kind: [
+        "minor",
+        "grammar",
+        "vocabulary",
+        "pronunciation",
+        "spelling",
+      ],
+      grammar_status: ["new", "learning", "weak", "mastered"],
+      lesson_item_type: [
+        "presentation",
+        "flashcard",
+        "multiple_choice",
+        "fill_blank",
+        "listening",
+        "speaking",
+        "writing_prompt",
+        "matching",
+        "info",
+      ],
+      lesson_type: [
+        "vocabulary",
+        "grammar",
+        "reading",
+        "listening",
+        "writing",
+        "speaking",
+        "conversation",
+        "review",
+      ],
+      message_sender: ["user", "assistant", "system"],
+      observation_result: ["correct", "incorrect", "partial", "exposure"],
+      observation_source: ["lesson", "conversation", "review", "exam"],
+      part_of_speech: [
+        "noun",
+        "verb",
+        "adjective",
+        "adverb",
+        "pronoun",
+        "preposition",
+        "conjunction",
+        "article",
+        "numeral",
+        "interjection",
+        "phrase",
+        "other",
+      ],
+      progress_status: ["not_started", "in_progress", "completed"],
+      skill_key: [
+        "reading",
+        "listening",
+        "writing",
+        "speaking",
+        "vocabulary",
+        "grammar",
+      ],
+      vocab_status: ["new", "learning", "known", "needs_review"],
+    },
+  },
+} as const

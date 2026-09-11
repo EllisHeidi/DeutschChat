@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Logo } from "@/components/layout/logo";
+import { RasterIcon, BRAND } from "@/components/icons/raster-icon";
 import { getOptionalUser } from "@/lib/auth/user";
 
 /**
@@ -25,7 +25,11 @@ export default async function AuthLayout({
         className="inline-flex rounded-sm"
         aria-label="DeutschChat"
       >
-        <Logo size="lg" />
+        <RasterIcon
+          src={BRAND.wordmark}
+          alt="DeutschChat"
+          className="h-16 w-auto"
+        />
       </Link>
       <main className="mt-8 w-full max-w-sm sm:mt-12">{children}</main>
     </div>
