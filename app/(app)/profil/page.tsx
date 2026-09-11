@@ -141,10 +141,10 @@ export default async function ProfilePage() {
             gespeicherten Fortschritt brauchst du eins.
           </p>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button asChild className="flex-1">
+            <Button asChild size="lg" className="flex-1">
               <Link href="/registrieren">Konto erstellen</Link>
             </Button>
-            <Button asChild variant="secondary" className="flex-1">
+            <Button asChild size="lg" variant="secondary" className="flex-1">
               <Link href="/anmelden">Anmelden</Link>
             </Button>
           </div>
